@@ -12,7 +12,7 @@
   
   <servlet>
   	<servlet-name>ImageStreamingServlet</servlet-name>
-  	<servlet-class>kr.or.ddit.servlet01.ImageStreamingServlet</servlet-class>
+  	<servlet-class>kr.or.ddit.servlet01.ImageStreamingServlet2</servlet-class>
   	<init-param>
   		<param-name>imageFolder</param-name>
   		<param-value>d:/contents/images</param-value>
