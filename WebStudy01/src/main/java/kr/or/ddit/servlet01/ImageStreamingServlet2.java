@@ -21,7 +21,7 @@ public class ImageStreamingServlet2 extends HttpServlet {
 
 		String imageName = req.getParameter("image");
 		if(imageName == null || imageName.isEmpty()) {
-			printList(req,resp);
+			printList(resp);
 			return;
 		}
 		String mimeType = application.getMimeType(imageName);
@@ -49,7 +49,7 @@ public class ImageStreamingServlet2 extends HttpServlet {
 		
 	}
 
-	public void printList(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	public void printList(HttpServletResponse resp) throws IOException {
 		
 		File fileFolder = new File(imageFolder);
 		if (!fileFolder.exists()) {

@@ -6,18 +6,21 @@ import javax.servlet.*;
 public class ImageStreamingServlet extends HttpServlet{
 	
 	private String imageFolder;
+	private ServletContext application;
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		imageFolder = config.getInitParameter("imageFolder");
-		System.out.printf("받은 파라미터 : %s\n", imageFolder);
+//		imageFolder = config.getInitParameter("imageFolder");
+		application = getServletContext();
+		imageFolder = application.getInitParameter("imageFolder");
+//		System.out.printf("받은 파라미터 : %s\n", imageFolder);
 	}
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 		throws IOException, ServletException
 	{				
-		ServletContext application = getServletContext();	// 톰캣과 communication 하기 위한 객체 , 가장먼저 생성되고 가장 오래 살아있는 객체, 가장 범위가 넓은 저장소		
+//		ServletContext application = getServletContext();	// 톰캣과 communication 하기 위한 객체 , 가장먼저 생성되고 가장 오래 살아있는 객체, 가장 범위가 넓은 저장소		
 		
 		String imageName = req.getParameter("image");
 		if(imageName==null || imageName.isEmpty()) {

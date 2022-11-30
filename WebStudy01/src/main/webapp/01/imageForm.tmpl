@@ -1,0 +1,27 @@
+	
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+</head>
+<body>
+	<form action='#cPath#/imageStreaming.do'>
+		<select name='image'>
+		#options#
+		</select>
+		<input type='submit' value='전송'/>
+	</form>
+	<div id="id_disp"></div>
+	
+	<script type="text/javascript">
+		$('select[name=image]').on('change',function(event){
+			event.target===this;
+// 			this.form.submit();	//this의 type : html elment	// submit 이벤트 발생하지 않음
+// 			$(this).parent("form").submit();	//type : jquery object	// submit 이벤트 발생
+// 			console.log($('[name=image] option:selected').val());
+// 			console.log($('<img>',{src: 'http://localhost/WebStudy01/imageStreaming.do?image='+$("[name=image] option:selected").val()}));
+			let v_img = $('<img>',{src: 'http://localhost/WebStudy01/imageStreaming.do?image='+$("[name=image] option:selected").val()});
+			$('#id_disp').html(v_img);
+		});
+	</script>
+</body>
+</html>
