@@ -48,7 +48,7 @@ public class TmplServlet extends HttpServlet {	//템플릿엔진
 		out.println(html);
 	}
 	
-	private String evaluateVariables(StringBuffer tmplSrc, /*Map<String, Object> scope*/HttpServletRequest req) {
+	private String evaluateVariables(StringBuffer tmplSrc, HttpServletRequest req/*Map<String, Object> scope*/) {
 		String evalPattern = "#([a-zA-Z0-9_]+)#";	// () : group 한개
 		Pattern regex = Pattern.compile(evalPattern);
 		Matcher matcher = regex.matcher(tmplSrc);
