@@ -43,6 +43,8 @@ public class ImageStreamingFormServlet02 extends HttpServlet {
 		req.setAttribute("cPath", req.getContextPath());
 		req.setAttribute("options", options);
 		
-		req.getRequestDispatcher("/01/imageForm.tmpl").forward(req,resp);
+//		req.getRequestDispatcher("/01/imageForm.tmpl").forward(req,resp);
+		String viewName = "/WEB-INF/views/01/imageForm.jsp";
+		req.getRequestDispatcher(viewName).forward(req,resp);
 	}
 }

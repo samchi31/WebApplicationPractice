@@ -4,9 +4,9 @@
 <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 </head>
 <body>
-	<form action='#cPath#/imageStreaming.do'>
+	<form action='${cPath}/imageStreaming.do'>
 		<select name='image'>
-		#options#
+		${options}
 		</select>
 		<input type='submit' value='전송'/>
 	</form>

@@ -28,14 +28,14 @@ private int factorial(int num){
   <h4>팩토리얼 연산 처리</h4>
   number = 10;<br>
   <form>
-    <input type="number" name="number" value="<%=Objects.toString(numParam, "") %>" onchange="this.form.submit()"/>
+    <input type="number" name="number" value='<%=Objects.toString(numParam, "") %>' onchange="this.form.submit()"/>
   </form>
 	<%
 	  if(numParam != null){
-	  int input = Integer.parseInt(numParam);
-	  String pattern = "%d != %d";
-	  int result = factorial(input);
-	  String expr = String.format(pattern,input,result);
+		  int input = Integer.parseInt(numParam);
+		  String pattern = "%d != %d";
+		  int result = factorial(input);
+		  String expr = String.format(pattern,input,result);
 	%>
 	<%=expr %>
 	<%} %>

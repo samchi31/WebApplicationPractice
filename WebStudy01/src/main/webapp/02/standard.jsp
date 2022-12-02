@@ -44,7 +44,7 @@
   	      private void testMethod(){}	// 메소드 정의 가능
   	    %> --%>
   	  5) comment : <%-- --%>
-  	    - client side comment : HTML, JS, CSS -> 브라우저에 의해 주석처리됨 (브라우저에서 주석내용을 확인 가능)
+ 	    - client side comment : HTML, JS, CSS -> 브라우저에 의해 주석처리됨 (브라우저에서 주석내용을 확인 가능)
 <!--   	    comment -->
 		- server side comment : java, jsp -> 응답데이터에 포함안됨
 		<% // java comment %>
