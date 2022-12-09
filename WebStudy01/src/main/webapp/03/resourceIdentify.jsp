@@ -53,7 +53,46 @@
 		Files.copy(is, Paths.get(downloadFile.getPath()), StandardCopyOption.REPLACE_EXISTING);
 	%>
 	resourcePath : <%=resourcePath %>
+	
+	*** 웹자원에 대한 식별성 : URI
+	URI(Uniform Resource Identifier) : 범용 자원 식별자 (아래는 종류)
+	
+		- URL(Uniform Resource Locator) : 범용 자원 위치
+		- URN(Uniform Resource Name) : 범용 자원 이름 (같은이름일 경우 힘듬, 이름을 알고 있어야함)
+		- URC(Uniform Resource Content,class,classfier) : 범용 자원 컨텐츠
+	
+	URL 구조
+	protocol(scheme)://IP(DN):port/context/depth1...depthn/resourceName
+		// : 루트를 표현하기 위한 구분자
+		:port : 생략가능
+	DomainName
+	3 level ; www.naver.com 	// .com : GlobalTopLevelDomain (GTLD)
+	4 level ; www.naver.co.kr	// .rk : NationalTopLevelDomain (NTLD)
+	
+	URL 표기 방식
+	절대경로(**) : 최상위 루트부터 전체 경로 표현 - 생략 가능한 요소가 존재
+		client side : /WebStudy01/resources/images/cat3.png
+					: context path 부터 시작됨
+		server side : /resources/images/cat3.png	// 서버 측에선 이미 context path 정보가 있어서 필요없다 
+					: context path 이후의 경로 표기 // 서버에선 상대경로 사용안함
+	상대경로 : 기준점(브라우저의 현재 주소)을 중심으로 한 경로
 </pre>
-
+<%
+// 	InputStream is2 = application.getResourceAsStream("/resources/images/cat1.jpg");
+	String realPath1 = application.getRealPath("/resources/images/cat1.jpg");
+	String realPath2 = application.getRealPath(request.getContextPath()+"/resources/images/cat1.jpg");
+	
+	// 포워드는 서버 안에서 이동
+	request.getRequestDispatcher("/WEB-INF/views/depth1/test.jsp").forward(request, response);
+	// 리다이렉트는 헤더로 응답 후 새로운 요청
+	response.sendRedirect(request.getContextPath()+"/member/memberForm.do");
+%>
+<!-- <img src="http://localhost/WebStudy01/resources/images/cat3.png" /> -->
+<img src="<%=request.getContextPath() %>/resources/images/cat3.png" />
+<img src="../resources/images/cat4.png" />
+<img src="cat5.png" />
+<%-- 서버사이드 방식으로 접근한 파일의 크기 : <%=is2.available() %> --%>
+realPath1 : <%=realPath1 %>
+realPath2 : <%=realPath2 %> 
 </body>
 </html>
