@@ -8,7 +8,7 @@
 <script type="text/javascript" src="<%=request.getContextPath() %>/resources/js/jquery-3.6.1.min.js"></script>
 </head>
 <body>
-  <input type="radio" name="dataType" value="json"/>JSON
+  <input type="radio" name="dataType" value="json" checked />JSON
   <input type="radio" name="dataType" value="xml"/>XML
   
   <form method="post">
@@ -25,5 +25,55 @@
   <div id="resultArea">
   2+2=4//sample
   </div>
+  
+<script type="text/javascript">
+let dataTypes = $('[name=dataType]');
+
+  let successes = {
+		json :	function(resp){
+			console.log(resp);
+// 			let trTags = [];
+// 			$.each(resp.target, function(name, value){			
+// 				trTags.push(makeTrTag(name,value));
+// 			});
+// 			listBody.empty();
+// 			listBody.append(trTags);
+		},
+		
+		xml :	function(domResp){
+			console.log(domResp);
+// 			let trTags = [];
+// 			let root = $(domResp).find("target");
+// 			root.children().each(function(idx, child){
+// 				let name = child.tagName;
+// 				let value = child.innerHTML;
+// 				trTags.push(makeTrTag(name,value));
+				
+// 			});
+// 			listBody.empty();
+// 			listBody.append(trTags);
+		}
+	};
+
+  let form = $('form').on('submit',function(event){
+	  event.preventDefault();
+	  let dataType = dataTypes.filter(':checked').val();
+// 	  console.log($(this).serialize());
+
+	  $.ajax({
+			method : this.method,
+			data : $(this).serialize(),
+			dataType : dataType,
+			success : successes[dataType],
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR);
+				console.log(status);
+				console.log(error);
+			}
+	  }); 
+  });
+  
+
+</script>
 </body>
 </html>

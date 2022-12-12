@@ -42,7 +42,7 @@ let makeTrTag = function(name, value){
 let successes = {
 	json :	function(resp){
 		let trTags = [];
-		$.each(resp, function(name, value){			
+		$.each(resp.target, function(name, value){			
 			trTags.push(makeTrTag(name,value));
 		});
 		listBody.empty();
@@ -51,7 +51,7 @@ let successes = {
 	
 	xml :	function(domResp){
 		let trTags = [];
-		let root = $(domResp).find("Properties");
+		let root = $(domResp).find("target");
 		root.children().each(function(idx, child){
 			let name = child.tagName;
 			let value = child.innerHTML;
