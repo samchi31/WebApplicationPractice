@@ -23,46 +23,44 @@
   	<button type="submit">=</button>
   </form>
   <div id="resultArea">
-  2+2=4//sample
+<!--   2+2=4//sample -->
   </div>
   
 <script type="text/javascript">
 let dataTypes = $('[name=dataType]');
-
+let resultArea = $('#resultArea');
   let successes = {
 		json :	function(resp){
-			console.log(resp);
-// 			let trTags = [];
-// 			$.each(resp.target, function(name, value){			
-// 				trTags.push(makeTrTag(name,value));
-// 			});
-// 			listBody.empty();
-// 			listBody.append(trTags);
+// 			console.log(resp);
+			let resultStr = f_operator(parseInt(resp.leftOp),parseInt(resp.rightOp),resp.operator);
+			resultArea.html(resultStr);
 		},
 		
 		xml :	function(domResp){
-			console.log(domResp);
-// 			let trTags = [];
-// 			let root = $(domResp).find("target");
-// 			root.children().each(function(idx, child){
-// 				let name = child.tagName;
-// 				let value = child.innerHTML;
-// 				trTags.push(makeTrTag(name,value));
-				
-// 			});
-// 			listBody.empty();
-// 			listBody.append(trTags);
+// 			console.log($(domResp));
+			
+			let left = parseInt($(domResp).find("leftOp").text());
+			let right = parseInt($(domResp).find("rightOp").text());
+			let operator = parseInt($(domResp).find("operator").text());
+			
+			let resultStr = f_operator(left,right,operator);
+			resultArea.html(resultStr);
 		}
 	};
 
   let form = $('form').on('submit',function(event){
 	  event.preventDefault();
 	  let dataType = dataTypes.filter(':checked').val();
+// 	  console.log(dataType);
 // 	  console.log($(this).serialize());
-
+	  let data = {};
+	  $.each($(this).serializeArray(),function(idx,item){
+		  data[item.name] = item.value;
+	  })
+	  console.log(data);
 	  $.ajax({
 			method : this.method,
-			data : $(this).serialize(),
+			data : data,
 			dataType : dataType,
 			success : successes[dataType],
 			error : function(jqXHR, status, error) {
@@ -73,6 +71,26 @@ let dataTypes = $('[name=dataType]');
 	  }); 
   });
   
+  function f_operator(num1,num2,opt){
+	  let result;
+	  let resultString;
+	  let optStr;
+	  if(opt == "PLUS"){
+		  result = num1 + num2;
+		  optStr = "+";
+	  } else if(opt == "MINUS"){
+		  result = num1 - num2;
+		  optStr = "-";
+	  } else if(opt == "MULTIPLY"){
+		  result = num1 * num2;
+		  optStr = "*";
+	  } else if(opt == "DIVIDE"){
+		  result = num1 / num2;
+		  optStr = "/";
+	  }
+	  resultString = ""+num1+optStr+num2+"="+result;
+	  return resultString;
+  };
 
 </script>
 </body>

@@ -1,12 +1,19 @@
 package kr.or.ddit.servlet04;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 @WebServlet("/04/calculate")
 public class CalculateServlet extends HttpServlet{
@@ -21,21 +28,21 @@ public class CalculateServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String accept = req.getHeader("Accept");
 		
-		req.setAttribute("leftOp",req.getParameter("leftOp"));
-		req.setAttribute("rightOp",req.getParameter("rightOp"));
-		req.setAttribute("operator",req.getParameter("operator"));
-				
-		// 뷰 선택
+//		req.setAttribute("", req.getParameter(""));
+		Enumeration<String> names = req.getParameterNames();
+		while(names.hasMoreElements()) {
+			String name = names.nextElement();
+//			System.out.println(name);
+			String value = req.getParameter(name);
+			req.setAttribute(name,value);
+		}
+		
 		String path = null;
-		if(accept.startsWith("*/*") || accept.toLowerCase().contains("html")) {
-			path = "/WEB-INF/views/03/calculateForm.jsp";
-		} else if (accept.toLowerCase().contains("json")) {
+		if (accept.toLowerCase().contains("json")) {
 			path = "/jsonView.do";
 		} else if (accept.toLowerCase().contains("xml")) {
 			path = "/xmlView.do";
 		}		
-		// 뷰 이동
 		req.getRequestDispatcher(path).forward(req, resp);
-	
 	}
 }
