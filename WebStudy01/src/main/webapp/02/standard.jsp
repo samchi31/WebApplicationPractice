@@ -7,16 +7,10 @@
   String variable; // 전역변수 
   private void testMethod(){}	// 메소드 정의 가능
 %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-<style type="text/css">
-/* comment */
-</style>
-</head>
-<body>
+
+<h4> request parameter param1 : <%=request.getParameter("param1") %> </h4>
+<h4> request attribute attr1 : <%=request.getAttribute("attr1") %> </h4>
+<h4> session attribute attr2 : <%=session.getAttribute("attr2") %> </h4>
   <h4>JSP spec</h4>
   <pre>
   	: 서블릿 스펙에서 파생된 하위 스펙, 템플릿 기반의 스크립트형태를 가진 스펙
@@ -57,6 +51,5 @@
 <script type="text/javascript">
 //   comment
   console.log("body 렌더링 완료");
+  console.log($("body"));
 </script>
-</body>
-</html>
