@@ -46,6 +46,10 @@
 	3. action tag
 	4. EL(표현언어)
 	5. JSTL
+	<%
+		if(1==1)
+			throw new RuntimeException("강제발생 예외");
+	%>
   </pre>
   
 <script type="text/javascript">

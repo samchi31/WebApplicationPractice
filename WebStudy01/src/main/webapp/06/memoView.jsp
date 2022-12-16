@@ -5,12 +5,14 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<jsp:include page="/includee/preScript.jsp"></jsp:include>
+<jsp:include page="/includee/preScript.jsp" />
+<!-- jquery 가 있어야 사용가능한 경우 아래쪽에 -->
+<script src="<%=request.getContextPath() %>/resources/js/custom.js"></script>
 </head>
 <body>
-	<h4>Restful 기반의 메모 관리(자원에 대한 식별성(url)+행위 정보(method))</h4>
+	<h4>Restful 기반의 메모 관리 (자원에 대한 식별성(url)+행위 정보(method))</h4>
 	
-	<form action="${pageContext.request.contextPath}/memo" method="post">
+	<form name="memoForm" action="${pageContext.request.contextPath}/memo" method="post">
 		<input type="text" name="writer" placeholder="작성자" />
 		<input type="date" name="date" placeholder="작성일" />
 		<textarea name="content"></textarea>
@@ -50,18 +52,34 @@
 	
 <script type="text/javascript">
 	let listBody = $('#listBody');
-	let form = $('form').on('submit',function(){
+	
+	// $('[name="memoForm"]')
+	let memoForm = $(document.memoForm).on('submit',function(event){
+		//this == event.target
+		//  	=/=$(this)		
 		event.preventDefault();
 		
-		let data = $(this).serialize();
-				
+// 		let data = $(this).serialize(); // parameter로 넘기기
+		// json payload ~> custom.js 
+// 		{
+// 			writer:""
+// 			, date:""
+// 			, content:""
+// 		}
+		let data = $(this).serializeObject();	// parameter 말고 json으로 보내기 위한 객체		
+		
+		//let memoForm = this;	// dom 객체
+		// parameter는 원래의 객체 구조를 알수 없다
 		$.ajax({
-			url : "${pageContext.request.contextPath}/memo",
+			url : this.action,
 			method : this.method,
-			data : data,
-			dataType : "json",
+			contentType : "application/json;charset=UTF=8",		// request content-type을 결정
+			data : JSON.stringify(data),	// 마샬링 하기
+			dataType : "json",		// 받아오는 resp 의 타입 (req의 accept 헤더, resp의 content-type헤더)
 			success : function(resp) {
 				makeListBody(resp.target);
+				//memoForm.reset();	//dom 객체일때만
+				memoForm[0].reset();	// jquery 객체일 경우
 			},
 			error : function(jqXHR, status, error) {
 				console.log(jqXHR);

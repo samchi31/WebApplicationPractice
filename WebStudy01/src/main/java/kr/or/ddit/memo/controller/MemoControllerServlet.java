@@ -1,16 +1,25 @@
 package kr.or.ddit.memo.controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.management.RuntimeErrorException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import kr.or.ddit.memo.dao.FileSystemMemoDAOImpl;
 import kr.or.ddit.memo.dao.MemoDAO;
@@ -50,9 +59,7 @@ public class MemoControllerServlet extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// Post(비동기)-(SC300)Redirect-Get : PRG pattern (accept 헤더는 유지된다)
-		
-		String accept = req.getHeader("Accept");
+		// Post(비동기)-(SC_300)Redirect-Get : PRG pattern (accept 헤더는 유지된다)		
 		
 		MemoVO memo = getMemoFromRequest(req);
 		int res = dao.insertMemo(memo);
@@ -62,24 +69,45 @@ public class MemoControllerServlet extends HttpServlet {
 		resp.sendRedirect(path);
 	}
 	
-	private MemoVO getMemoFromRequest(HttpServletRequest req) {
-		MemoVO memo = new MemoVO();
-		
-		Map<String,String> map = new HashMap<String, String>();
-		
-		Enumeration<String> parameterNames = req.getParameterNames();
-		while(parameterNames.hasMoreElements()) {
-//			System.out.println(parameterNames.nextElement());
-			String name = parameterNames.nextElement();
-			String value = req.getParameter(name);
-			map.put(name,value);
+	private MemoVO getMemoFromRequest(HttpServletRequest req) throws IOException {
+		String contentType = req.getContentType();
+		MemoVO memo = null;
+		if(contentType.contains("json")) {
+			try(
+				BufferedReader br = req.getReader();	// body content read 용 입력 스트림	
+		 	){
+				memo = new ObjectMapper().readValue(br, MemoVO.class);	// 역직렬화 + unmarshalling
+			} 
+		} else if (contentType.contains("xml")) {
+			try(
+				BufferedReader br = req.getReader();	// body content read 용 입력 스트림	
+		 	){
+				memo = new XmlMapper().readValue(br, MemoVO.class);	// 역직렬화 + unmarshalling
+			} 
+		} else {	// parameter로 온 경우
+			memo = new MemoVO();
+			memo.setWriter(req.getParameter("writer"));
+			memo.setContent(req.getParameter("content"));
+			memo.setDate(req.getParameter("date"));
 		}
-		
-		memo.setWriter(map.get("writer"));
-		memo.setDate(map.get("date"));
-		memo.setContent(map.get("content"));
-
 		return memo;
+				
+//		// 역직렬화 -> unmarshalling
+//		try(
+//			BufferedReader br = req.getReader();				
+// 		){
+//			MemoVO memo = new MemoVO();		
+//			String tmp = null;
+//			StringBuffer strJson = new StringBuffer();
+//			while((tmp = br.readLine()) != null) {
+//				strJson.append(tmp+"\n");
+//			}
+//			ObjectMapper mapper = new ObjectMapper();			
+//			memo = mapper.readValue(strJson.toString(), MemoVO.class);	
+//					
+//			System.out.println(memo);
+//			return memo;
+//		} 
 	}
 
 	@Override

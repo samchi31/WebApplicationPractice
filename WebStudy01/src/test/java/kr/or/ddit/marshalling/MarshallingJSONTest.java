@@ -18,7 +18,7 @@ import org.junit.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class MarshallingTest {
+public class MarshallingJSONTest {
 
 	Object target;
 	ObjectMapper mapper;
