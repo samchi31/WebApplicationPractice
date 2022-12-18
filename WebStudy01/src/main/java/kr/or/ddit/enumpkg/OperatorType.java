@@ -5,8 +5,9 @@ import kr.or.ddit.servlet04.RealOperator;
 public enum OperatorType {
 	PLUS('+', (l, r) -> {return l+r;} ), 
 	MINUS('-', (l, r) -> l-r ), 
-	MULTIPLY('+', (l, r) -> l*r ), 
-	DIVIDE('/', (l, r) -> l/r );
+	MULTIPLY('*', (l, r) -> l*r ), 
+	DIVIDE('/', (l, r) -> l/r ),
+	REMAIN('%', (l, r) -> l%r );
 	
 	private char sign;
 	private RealOperator realOperator;

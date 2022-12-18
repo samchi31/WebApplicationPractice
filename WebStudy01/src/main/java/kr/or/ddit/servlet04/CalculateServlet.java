@@ -48,7 +48,7 @@ public class CalculateServlet extends HttpServlet{
 			viewName = "/jsonView.do";
 		} else if (accept.toLowerCase().contains("xml")) {
 			viewName = "/xmlView.do";
-		} else {	
+		} else if (accept.toLowerCase().contains("plain")){
 			viewName = "/WEB-INF/views/04/plainView.jsp";
 		}
 		req.getRequestDispatcher(viewName).forward(req, resp);

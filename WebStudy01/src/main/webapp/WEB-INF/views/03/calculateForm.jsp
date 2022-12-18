@@ -35,6 +35,22 @@
 <script type="text/javascript">
   let dataTypes = $('[name=dataType]');
   let resultArea = $('#resultArea');
+
+  let successes = {
+			json : function(resp){
+				console.log(resp);
+				resultArea.text(resp.expression);
+			},
+			xml : function(docResp){
+				console.log(docResp);
+				let expression = $(docResp).find("expression").text();
+				resultArea.html(expression);
+			},
+			text : function(plain){
+				console.log(plain);
+				resultArea.html(plain);
+			}
+	};
   
   let form = $('#calForm').on('submit',function(event){
 	  event.preventDefault();
@@ -55,9 +71,7 @@
 			contentType : "application/json",
 			data : JSON.stringify(data),
 			dataType : dataType,
-			success : function(resp){
-				resultArea.html(resp.expression);
-			},
+			success : successes[dataType],
 			error : function(jqXHR, status, error) {
 				console.log(jqXHR);
 				console.log(status);
@@ -66,27 +80,7 @@
 	  }); 
 	  return false; 	// preventDefault 시 필요없긴 함
   });
-  
-  function f_operator(num1,num2,opt){
-	  let result;
-	  let resultString;
-	  let optStr;
-	  if(opt == "PLUS"){
-		  result = num1 + num2;
-		  optStr = "+";
-	  } else if(opt == "MINUS"){
-		  result = num1 - num2;
-		  optStr = "-";
-	  } else if(opt == "MULTIPLY"){
-		  result = num1 * num2;
-		  optStr = "*";
-	  } else if(opt == "DIVIDE"){
-		  result = num1 / num2;
-		  optStr = "/";
-	  }
-	  resultString = ""+num1+optStr+num2+"="+result;
-	  return resultString;
-  };
+
 
 </script>
 </body>

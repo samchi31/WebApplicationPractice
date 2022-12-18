@@ -68,11 +68,15 @@ public class FileSystemMemoDAOImpl implements MemoDAO {
 
 	@Override
 	public int updateMemo(MemoVO memo) {
-		return 0;
+		memoTable.put(memo.getCode(), memo);
+		serializeMemoTable();
+		return 1;
 	}
 
 	@Override
 	public int deleteMemo(int code) {
-		return 0;
+		memoTable.remove(code);
+		serializeMemoTable();
+		return 1;
 	}
 }

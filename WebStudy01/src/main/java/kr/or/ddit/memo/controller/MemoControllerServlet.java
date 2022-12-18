@@ -25,7 +25,7 @@ import kr.or.ddit.memo.dao.FileSystemMemoDAOImpl;
 import kr.or.ddit.memo.dao.MemoDAO;
 import kr.or.ddit.vo.MemoVO;
 
-@WebServlet("/memo")
+@WebServlet("/memo/*")
 public class MemoControllerServlet extends HttpServlet {
 	
 	private MemoDAO dao = FileSystemMemoDAOImpl.getInstance();
@@ -112,10 +112,30 @@ public class MemoControllerServlet extends HttpServlet {
 
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 아니 put 요청 왤케 마니 오냐;;
+		MemoVO memo = getMemoFromRequest(req);
+//		System.out.println(memo);
+		int ret = dao.updateMemo(memo);
+		
+		//redirect
+		String path = req.getContextPath() +"/memo";
+		resp.sendRedirect(path);
 	}
 	
 	@Override
 	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		// 왜 한번 더 들어올까???
+		String pathInfo = req.getPathInfo();
+		if(pathInfo == null) {
+			return;
+		}
+		int code = Integer.parseInt(pathInfo.split("/")[1]);
+//		System.out.println(code);
+		int ret = dao.deleteMemo(code);
+		
+		//redirect
+		String path = req.getContextPath() +"/memo";
+		resp.sendRedirect(path);
 	}
 }
 
