@@ -112,14 +112,17 @@ public class MemoControllerServlet extends HttpServlet {
 
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 아니 put 요청 왤케 마니 오냐;;
+		// 아니 put 요청 왤케 마니 오냐;; -> put은 표준메소드 아님 그래서 redirect 처리를 ajax 안해줌 수동으로 해줘야함
 		MemoVO memo = getMemoFromRequest(req);
-//		System.out.println(memo);
+		System.out.println(memo);
 		int ret = dao.updateMemo(memo);
 		
 		//redirect
 		String path = req.getContextPath() +"/memo";
-		resp.sendRedirect(path);
+//		resp.sendRedirect(path);
+		// 수동으로 redirect 해줄거임 그래서 그냥 forward
+		req.setAttribute("location", req.getContextPath() +"/memo");
+		req.getRequestDispatcher("/jsonView.do").forward(req, resp);
 	}
 	
 	@Override

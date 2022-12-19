@@ -40,3 +40,26 @@ $.fn.log = function(){
 	}
 	return this;
 }
+
+$.fn.sessionTimer = function(seconds){
+	let cnt = 1;
+	let area = this;
+//	console.log(this);
+	let jobId = setInterval(function(){
+//		console.log(cnt);
+		let data = seconds - cnt++;
+		area.html(data);
+
+		if(cnt>seconds){
+			clearInterval(jobId);
+			location.reload();
+		}
+		if(data < 60){
+			if(confirm("연장하시겠습니까?")){
+				clearInterval(jobId);
+				location.reload();
+			}
+		}
+	}, 1000);
+	return this;
+}

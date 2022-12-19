@@ -76,19 +76,23 @@
 	
 <script type="text/javascript">
 
-	$.ajax({
-		url : "${pageContext.request.contextPath}/memo",
-		method : "get",
-		dataType : "json",
-		success : function(resp) {
-			makeListBody(resp.target);
-		},
-		error : function(jqXHR, status, error) {
-			console.log(jqXHR);
-			console.log(status);
-			console.log(error);
-		}
-	});
+	let getAjaxFirst = function(location){
+		$.ajax({
+			url : location,
+			method : "get",
+			dataType : "json",
+			success : function(resp) {
+				makeListBody(resp.target);
+			},
+			error : function(jqXHR, status, error) {
+				console.log(jqXHR);
+				console.log(status);
+				console.log(error);
+			}
+		});
+	};
+	getAjaxFirst("${pageContext.request.contextPath}/memo");
+	
 
 	let listBody = $('#listBody');
 	
@@ -130,7 +134,7 @@
 		return false;
 	});
 	
-	//ED'path't Driven Development), TDD(Test Driven Development)
+	//EDD : Event Driven Development), TDD(Test Driven Development)
 	const myModal = $('#myModal').on('show.bs.modal',function(event){
 		//this == event.target
 		//console.log(event.relatedTarget);	// modal을 오픈할 때 사용한 클릭 대상, tr
@@ -205,9 +209,8 @@
 			data : JSON.stringify(data),	// 마샬링 하기
 			dataType : "json",		// 받아오는 resp 의 타입 (req의 accept 헤더, resp의 content-type헤더)
 			success : function(resp) {
-				makeListBody(resp.target);
-				//memoForm.reset();	//dom 객체일때만
-				memoForm[0].reset();	// jquery 객체일 경우
+				console.log(resp);
+				getAjaxFirst(resp.location);// redirect 수동으로 해줌
 			},
 			error : function(jqXHR, status, error) {
 				console.log(jqXHR);

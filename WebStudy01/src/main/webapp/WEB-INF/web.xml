@@ -23,4 +23,9 @@
   	<servlet-name>ImageStreamingServlet</servlet-name>
   	<url-pattern>/imageStreaming.do</url-pattern>
   </servlet-mapping>
+  
+  <session-config>
+  	<session-timeout>2<!-- minute --></session-timeout>
+<!--   	<tracking-mode></tracking-mode> -->
+  </session-config>
 </web-app>
