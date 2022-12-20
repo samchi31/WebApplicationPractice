@@ -44,7 +44,7 @@
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-	        <button type="button" class="btn btn-danger" id="btn_delete">삭제</button>
+	        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="btn_delete">삭제</button>
 	        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#updateModal" id="btn_modal_update">수정</button>
 	      </div>
 	    </div>
@@ -66,7 +66,7 @@
 				  <textarea name="content"></textarea>	
 				  <div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-					<input type="submit" class="btn btn-info" value="수정" />
+					<input type="submit" class="btn btn-info" data-bs-dismiss="modal" value="수정" />
 				  </div>	
 			  </form>
 			</div>
@@ -184,7 +184,9 @@
 				url : "${pageContext.request.contextPath}/memo/"+code,
 				method : "delete",
 				success : function(resp) {
-					makeListBody(resp);
+					//console.log(resp);
+// 					makeListBody(resp);
+					getAjaxFirst(resp.location);// redirect 수동으로 해줌
 				},
 				error : function(jqXHR, status, error) {
 					console.log(jqXHR);
@@ -209,7 +211,7 @@
 			data : JSON.stringify(data),	// 마샬링 하기
 			dataType : "json",		// 받아오는 resp 의 타입 (req의 accept 헤더, resp의 content-type헤더)
 			success : function(resp) {
-				console.log(resp);
+// 				console.log(resp);
 				getAjaxFirst(resp.location);// redirect 수동으로 해줌
 			},
 			error : function(jqXHR, status, error) {

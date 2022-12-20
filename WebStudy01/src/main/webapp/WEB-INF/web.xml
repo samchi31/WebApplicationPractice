@@ -28,4 +28,19 @@
   	<session-timeout>2<!-- minute --></session-timeout>
 <!--   	<tracking-mode></tracking-mode> -->
   </session-config>
+  
+  <error-page>
+  	<!-- 500 에러 발생 시 따로 처리 -->
+  	<error-code>500</error-code>
+  	<location>/errors/error500.jsp</location>
+  </error-page>
+  <error-page>
+  	<!-- 404 에러 발생 시 따로 처리 -->
+  	<error-code>404</error-code>
+  	<location>/errors/error404.jsp</location>
+  </error-page>
+  <error-page>
+  	<exception-type>java.lang.NullPointerException</exception-type>
+  	<location>/errors/errorNull.jsp</location>
+  </error-page>
 </web-app>

@@ -136,9 +136,12 @@ public class MemoControllerServlet extends HttpServlet {
 //		System.out.println(code);
 		int ret = dao.deleteMemo(code);
 		
-		//redirect
-		String path = req.getContextPath() +"/memo";
-		resp.sendRedirect(path);
+//		//redirect
+//		String path = req.getContextPath() +"/memo";
+//		resp.sendRedirect(path);
+		// 수동으로 redirect 해줄거임 그래서 그냥 forward
+		req.setAttribute("location", req.getContextPath() +"/memo");
+		req.getRequestDispatcher("/jsonView.do").forward(req, resp);
 	}
 }
 

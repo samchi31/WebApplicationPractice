@@ -41,25 +41,91 @@ $.fn.log = function(){
 	return this;
 }
 
-$.fn.sessionTimer = function(seconds){
-	let cnt = 1;
-	let area = this;
-//	console.log(this);
-	let jobId = setInterval(function(){
-//		console.log(cnt);
-		let data = seconds - cnt++;
-		area.html(data);
-
-		if(cnt>seconds){
-			clearInterval(jobId);
-			location.reload();
+$.fn.sessionTimer = function(timeout, msgObj){
+	if(!timeout)
+		throw Error("세션 타임아웃 값이 없음");
+	
+	const SPEED = 100;
+	const TIMEOUT = timeout;
+	const timerArea = this;
+	// event propagation : bubbling
+	let msgArea = null;
+	if(msgObj){
+		msgArea = $(msgObj.msgAreaSelector).on("click", msgObj.btnSelector, function(event){		
+			//this == controlBtn(msgArea의 descendent) javascript 객체
+			//console.log(this.id + ", " + $(this).prop("id"));
+			if(this.id=="YES"){
+				jobClear();
+				timerInit();
+				$.ajax({
+					method : "head"	//response의 body가 필요없다
+				});
+			} 
+			msgArea.hide();
+		}).hide();
+	}
+	let jobClear = function() {
+		let timerJob = timerArea.data("timerJob");
+		if(timerJob){
+			clearInterval(timerJob);
 		}
-		if(data < 60){
-			if(confirm("연장하시겠습니까?")){
-				clearInterval(jobId);
+		
+		let msgJob = msgArea.data("msgJob");
+		if(msgJob){
+			clearTimeout(msgJob);
+		}
+	}
+	
+	let timerInit = function(){
+		if(msgObj){
+			// 지연시간 설정
+			let msgJob = setTimeout(() => {
+				msgArea.show();
+			}, (TIMEOUT-60) * SPEED);
+			// 데이터 저장
+			msgArea.data("msgJob", msgJob);
+		}
+		let timer = TIMEOUT;
+		let timerJob = setInterval(() => {
+			if(timer == 1){
+				clearInterval(timerJob);
 				location.reload();
-			}
-		}
-	}, 1000);
+			} else 
+				timerArea.html(timeFormat(--timer));
+		},SPEED);
+		// 데이터 저장
+		timerArea.data("timerJob",timerJob);
+	}
+	timerInit();
+	
+	let timeFormat = function(time){
+		let min = Math.trunc(time / 60);	// 소수점 버림
+		let sec = time % 60;
+		return min + ":" + sec;
+	};	
+	
 	return this;
 }
+
+//$.fn.sessionTimer = function(seconds){
+//	let cnt = 1;
+//	let area = this;
+////	console.log(this);
+//	let jobId = setInterval(function(){
+////		console.log(cnt);
+//		let data = seconds - cnt++;
+//		area.html(data);
+//
+//		if(cnt>seconds){
+//			clearInterval(jobId);
+//			location.reload();
+//		}
+//		if(data < 60){
+//			if(confirm("연장하시겠습니까?")){
+//				clearInterval(jobId);
+//				location.reload();
+//			}
+//		}
+//	}, 1000);
+//	return this;
+//}

@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <title>08/sessionDesc.jsp</title>
 <jsp:include page="/includee/preScript.jsp"/>
-<script src="<%=request.getContextPath() %>/resources/js/custom.js"></script>
+<script src="<%=request.getContextPath() %>/resources/js/custom.js" ></script>
 </head>
 <body>
 <h4>session(HttpSession)</h4>
@@ -36,11 +36,18 @@
 		4) session invalidation(명시적인 로그아웃)
 	
 </pre>
+<div id="msgArea">
+	세션을 연장하겠습니까?
+	<input type="button" value="예" class="controlBtn" id="YES"/> 
+	<input type="button" value="아니오" class="controlBtn" id="NO"/> 
+</div>
 <script type="text/javascript">
 	
-	$("#timerArea").html(<%=session.getMaxInactiveInterval() %>)
-					.sessionTimer(<%=session.getMaxInactiveInterval() %>);
-
+	// 함수 필수 파라미터 옵션 파라미터 구분
+	$("#timerArea").sessionTimer(${pageContext.session.maxInactiveInterval}, 
+			{ msgAreaSelector : "#msgArea", btnSelector : ".controlBtn"});
+	
 </script>
+<jsp:include page="/includee/postScript.jsp"/>
 </body>
 </html>
