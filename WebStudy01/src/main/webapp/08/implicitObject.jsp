@@ -22,7 +22,7 @@
   ex) ${pageContext.request.contextPath }
   
   exception : 발생한 에러(예외)에 대한 정보를 캡슐화한 객체, page 지시자의 isErrorPage 가 활성화된 경우에만 사용가능
- 
+ 	
 </pre>
 </body>
 </html>
