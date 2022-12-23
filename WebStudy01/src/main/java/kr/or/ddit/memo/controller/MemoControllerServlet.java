@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
+import kr.or.ddit.memo.dao.DataBaseMemoDAOImpl;
 import kr.or.ddit.memo.dao.FileSystemMemoDAOImpl;
 import kr.or.ddit.memo.dao.MemoDAO;
 import kr.or.ddit.vo.MemoVO;
@@ -28,7 +29,9 @@ import kr.or.ddit.vo.MemoVO;
 @WebServlet("/memo/*")
 public class MemoControllerServlet extends HttpServlet {
 	
-	private MemoDAO dao = FileSystemMemoDAOImpl.getInstance();
+//	private MemoDAO dao = FileSystemMemoDAOImpl.getInstance();
+	private MemoDAO dao = DataBaseMemoDAOImpl.getInstance();
+//	pirvate MemoDAO dao;	// 결합력 낮아짐 -> 컨테이너 구조 필요 -> spring
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

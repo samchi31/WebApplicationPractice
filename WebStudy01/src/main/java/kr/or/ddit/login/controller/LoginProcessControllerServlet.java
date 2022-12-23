@@ -41,6 +41,7 @@ public class LoginProcessControllerServlet extends HttpServlet{
 		}
 		String memId = req.getParameter("memId");
 		String memPass = req.getParameter("memPass");
+		String saveId = req.getParameter("saveId"); 
 		
 		MemberVO member = new MemberVO();
 		member.setMemId(memId);
@@ -53,7 +54,16 @@ public class LoginProcessControllerServlet extends HttpServlet{
 			// 2
 			// 4
 			if(authenticate(member)) {
-				setCookie(req, resp);	// 로그인 성공 시 쿠키 설정
+				Cookie saveIdCookie = new Cookie("saveId", member.getMemId());	
+				// 모든 호스트에 대해서 공통적으로 유지(재전송 가능)
+				saveIdCookie.setDomain("localhost");
+				saveIdCookie.setPath(req.getContextPath());
+				int maxAge = 0;
+				if(StringUtils.isNotBlank(saveId)) {
+					maxAge = 5;
+				}
+				saveIdCookie.setMaxAge(maxAge);
+				resp.addCookie(saveIdCookie);
 				session.setAttribute("authMember", member);
 				viewName = "redirect:/";
 			} else {
@@ -89,18 +99,4 @@ public class LoginProcessControllerServlet extends HttpServlet{
 		return valid;
 	}
 	
-	private void setCookie(HttpServletRequest req, HttpServletResponse resp) {
-		// 아이디기억하기(5일) 체크박스 없이 하면 기존에 있던 쿠키도 삭제
-		String memId = req.getParameter("memId");
-		String saveId = req.getParameter("saveId");	// on , null
-		if(saveId != null && saveId.equals("on")) {
-			Cookie idCookie = new Cookie("memId", memId);
-			idCookie.setMaxAge(60*60*24*5); //5일
-			resp.addCookie(idCookie);
-		} else {
-			Cookie idCookie = new Cookie("memId", memId);
-			idCookie.setMaxAge(0);
-			resp.addCookie(idCookie);
-		}
-	}
 }

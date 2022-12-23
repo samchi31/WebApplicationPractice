@@ -3,6 +3,7 @@
 <%@page import="java.io.File"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,16 +26,16 @@
 <body>
 
 	<form name="imgForm" action="<%=request.getContextPath()%>/imageStreaming.do">
+		<c:set var="image" value="${cookie['image']['value'] }"/>
 		<select name="image">
 		
 		
 		</select>
 		
-		<input type="text" name="sample" value ="asdf"/>
 		<input type='submit' value='전송'/>
 	</form>
 	<div id="imgArea">
-		<img src="<%=request.getContextPath()%>/imageStreaming.do?image=cute1.PNG"/>
+<%-- 		<img src="<%=request.getContextPath()%>/imageStreaming.do?image=cute1.PNG"/> --%>
 	</div>
 	
 	<script type="text/javascript">
@@ -94,6 +95,11 @@
 	                options.push(option);
 				});
 				SELECTTAG.append(options);
+				
+				<c:if test="${not empty cookie['imageCookie']}">
+					SELECTTAG.val("${cookie['imageCookie']['value']}");
+					SELECTTAG.trigger('change');
+				</c:if>
 			},
 			error : function(jqXHR, status, error) {
 				console.log(jqXHR);

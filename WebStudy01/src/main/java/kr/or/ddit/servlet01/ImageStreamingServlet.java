@@ -36,6 +36,11 @@ public class ImageStreamingServlet extends HttpServlet{
 			return;
 		}
 		
+		Cookie imageCookie = new Cookie("imageCookie", imageName);
+		imageCookie.setPath(req.getContextPath());
+		imageCookie.setMaxAge(60*60*24*3);
+		resp.addCookie(imageCookie);
+		
 		FileInputStream fis = null;
 		OutputStream os = null;
 		try {			

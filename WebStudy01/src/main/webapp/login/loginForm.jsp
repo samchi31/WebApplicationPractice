@@ -15,16 +15,13 @@
 </c:if>
 </head>
 <body>
-<%
-	String findedValue = new CookieHttpServletRequestWrapper(request).getCookieValue("memId");
-	session.setAttribute("validId", findedValue);
-// 	System.out.println(findedValue);
-%>
+
 <form method="post" action='<c:url value="/login/loginProcess.do"/>'>
 	<ul>
 		<li>
-			<input type="text" name="memId" placeholder="아이디" value="${validId }"/>
-			<input type="checkbox" name="saveId" />아이디기억하기(5일) 체크박스 없이 하면 기존에 있던 쿠키도 삭제
+			<c:set var="saveId" value="${cookie['saveId']['value'] }"/>
+			<input type="text" name="memId" placeholder="아이디" value="${not empty validId ? validId : saveId }"/>
+			<input type="checkbox" name="saveId" ${not empty saveId ? 'checked' : '' }/>아이디기억하기
 			<c:remove var="validId" scope="session"/></li>
 		<li>
 			<input type="password" name="memPass" placeholder="비밀번호"/>

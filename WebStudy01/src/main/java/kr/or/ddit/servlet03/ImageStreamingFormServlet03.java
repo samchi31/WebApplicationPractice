@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,8 +29,7 @@ public class ImageStreamingFormServlet03 extends HttpServlet{
 	 	  return mime != null && mime.startsWith("image/");
 	    });
 		
-//	    req.setAttribute("imageFiles",imageFiles);
-	    
+//	    req.setAttribute("imageFiles",imageFiles);    
 	    
 	    String accept = req.getHeader("Accept");
 	    if(accept.contains("json")) {
@@ -38,6 +38,7 @@ public class ImageStreamingFormServlet03 extends HttpServlet{
 	    	// Marshalling
 	    	String json = marshalling(imageFiles);
 	    	resp.setContentType("application/json");
+	   
 	    	try( 
 	    		PrintWriter out = resp.getWriter() 
 	    	){

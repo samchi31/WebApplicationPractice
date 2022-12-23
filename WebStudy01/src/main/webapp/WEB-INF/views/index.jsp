@@ -10,7 +10,7 @@
 				$('.logoutBtn').on("click", function(event){
 					event.preventDefault();
 					document.logoutForm.submit();
-					return false
+					return false;
 				});
 			</script>
 		</form>
