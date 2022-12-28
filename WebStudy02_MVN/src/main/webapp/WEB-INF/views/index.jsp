@@ -4,8 +4,9 @@
 <h4>WELCOME</h4>
 <c:choose>
 	<c:when test="${not empty sessionScope.authMember }">
+		<a href="<c:url value="/mypage.do" />">${authMember.memName }님</a>
 		<form name="logoutForm" action="<c:url value='/login/logout.do'/>" method="post">
-			<a href='#' class="logoutBtn">${authMember.memName }님 로그아웃</a>
+			<a href='#' class="logoutBtn">로그아웃</a>
 			<script type="text/javascript">
 				$('.logoutBtn').on("click", function(event){
 					event.preventDefault();

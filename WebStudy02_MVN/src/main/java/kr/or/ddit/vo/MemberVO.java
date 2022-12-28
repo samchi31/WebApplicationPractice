@@ -2,7 +2,19 @@ package kr.or.ddit.vo;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import javax.validation.groups.Default;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import kr.or.ddit.validate.DeleteGroup;
+import kr.or.ddit.validate.InsertGroup;
+import kr.or.ddit.validate.UpdateGroup;
 
 /**
  * VO (Value Object), DTO (Data Transfer Object), JavaBean, Model
@@ -20,26 +32,38 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * 7. 회원관리를 위한 Domain Layer
  */
 public class MemberVO implements Serializable{
+	@NotBlank(groups= {Default.class, DeleteGroup.class})
 	private String memId;
+	@NotBlank(groups= {Default.class, DeleteGroup.class})
+	@Size(min=4, max=8, groups= {Default.class, DeleteGroup.class})	//@Length(...)  framework 종속성을 위해 Size 사용
 	@JsonIgnore
 	private transient String memPass;
+	@NotBlank
 	private String memName;
 	@JsonIgnore
 	private transient String memRegno1;
 	@JsonIgnore
 	private transient String memRegno2;
+	@Pattern(regexp="\\d{4}-\\d{2}-\\d{2}", groups=InsertGroup.class)
+	@NotBlank(groups=InsertGroup.class)		//group hint : 특정 상황일 때
 	private String memBir;
+	@NotBlank
 	private String memZip;
+	@NotBlank
 	private String memAdd1;
+	@NotBlank
 	private String memAdd2;
 	private String memHometel;
 	private String memComtel;
 	private String memHp;
+	@Email
 	private String memMail;
 	private String memJob;
 	private String memLike;
 	private String memMemorial;
+	@Pattern(regexp="\\d{4}-\\d{2}-\\d{2}")
 	private String memMemorialday;
+	@Min(0)
 	private Integer memMileage;
 	private String memDelete;
 	

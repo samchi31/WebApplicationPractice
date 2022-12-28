@@ -63,4 +63,29 @@
 			, #{memDelete, jdbcType=VARCHAR}
 		)
 	</insert>
+	
+	<update id="updateMember" parameterType="MemberVO">
+		UPDATE member
+		   SET
+			mem_regno1 = #{memRegno1, jdbcType=CHAR}
+			, mem_regno2 = #{memRegno2, jdbcType=CHAR}
+			, mem_zip = #{memZip, jdbcType=CHAR}
+			, mem_add1 = #{memAdd1, jdbcType=VARCHAR}
+			, mem_add2 = #{memAdd2, jdbcType=VARCHAR}
+			, mem_hometel = #{memHometel, jdbcType=VARCHAR}
+			, mem_comtel = #{memComtel, jdbcType=VARCHAR}
+			, mem_hp = #{memHp, jdbcType=VARCHAR}
+			, mem_mail = #{memMail, jdbcType=VARCHAR}
+			, mem_job = #{memJob, jdbcType=VARCHAR}
+			, mem_like = #{memLike, jdbcType=VARCHAR}
+			, mem_memorial = #{memMemorial, jdbcType=VARCHAR}
+			, mem_memorialday = TO_DATE(#{memMemorialday, jdbcType=DATE}, 'YYYY-MM-DD')
+		WHERE
+		    mem_id = #{memId, jdbcType=VARCHAR}
+	</update>
+	
+	<delete id="deleteMember" parameterType="String">
+		DELETE FROM member
+		WHERE  mem_id = #{memId, jdbcType=VARCHAR}
+	</delete>
 </mapper>

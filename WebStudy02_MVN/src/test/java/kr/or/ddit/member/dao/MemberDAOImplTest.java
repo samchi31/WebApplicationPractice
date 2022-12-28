@@ -25,7 +25,7 @@ public class MemberDAOImplTest {
 		member.setMemAdd2("1234");
 	}
 
-	@Test
+//	@Test
 	public void testInsertMember() {
 		dao.insertMember(member);
 	}
@@ -36,17 +36,17 @@ public class MemberDAOImplTest {
 		memberList.stream().forEach(System.out::println);
 	}
 
-	//@Test
+//	@Test
 	public void testSelectMember() {
 		MemberVO member = dao.selectMember("a001");
 		System.out.println(member);
-		member=dao.selectMember("1q234");
-		assertNull(member);
+//		member=dao.selectMember("1q234");
+//		assertNull(member);
 	}
 
-	//@Test
+	@Test
 	public void testUpdateMember() {
-		fail("Not yet implemented");
+		int ret = dao.updateMember(member);
 	}
 
 	//@Test

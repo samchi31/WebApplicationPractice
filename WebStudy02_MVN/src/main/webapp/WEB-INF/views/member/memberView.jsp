@@ -6,11 +6,9 @@
 <head>
 <meta charset="UTF-8">
 <title>member/memberView.jsp</title>
-<jsp:include page="/includee/preScript.jsp" />
 </head>
 <body>
 	<h4>회원 상세</h4>
-	${member }
 	<table>
 		<tr>
 			<th>회원아이디</th>
@@ -88,8 +86,28 @@
 			<th>탈퇴여부</th>
 			<td>${member.memDelete}</td>
 		</tr>
+		
+		<c:if test="${sessionScope.authMember eq member }">
+			<tr>
+				<td colspan="2">
+					<a href='<c:url value="/member/memberUpdate.do"/>' class="btn btn-primary">수정</a>
+					<a href='#' class="btn btn-danger delete">탈퇴</a>
+					<form method="post" action='<c:url value="/member/memberDelete.do"/>'>
+						<input type="password" name="memPass">
+					</form>	
+					<span class="text-danger">${errors.memPass}</span></td>				
+				</td>
+			</tr>		
+		</c:if>
 	</table>
-
-	<jsp:include page="/includee/postScript.jsp" />
+<jsp:include page="/includee/preScript.jsp" />
+<script type="text/javascript">
+	let form = $('form');
+	$('a.delete').on('click',function(event){	
+		event.preventDefault();
+		form.submit();
+		return false;
+	});
+</script>
 </body>
 </html>
