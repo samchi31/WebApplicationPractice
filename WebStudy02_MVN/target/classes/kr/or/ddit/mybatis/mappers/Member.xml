@@ -4,19 +4,53 @@
 
 	<select id="selectMemberList" resultType="MemberVO">
 		SELECT MEM_ID, MEM_NAME, MEM_MAIL, MEM_HP, MEM_ADD1, MEM_MILEAGE 
-		FROM MEMBER 
+		, (
+		    SELECT  COUNT(DISTINCT CART_PROD) AS CART_COUNT
+		    FROM    CART	
+		    WHERE	CART_MEMBER = MEM_ID
+		)
+		FROM MEMBER
 	</select>
-
-	<select id="selectMember" parameterType="String" resultType="MemberVO">
+	
+	<resultMap type="MemberVO" id="memberMap" autoMapping="true">
+		<id property="memId" column="MEM_ID" />
+		<collection property="prodList" ofType="ProdVO" autoMapping="true">
+			<association property="buyer" javaType="BuyerVO" autoMapping="true" />
+		</collection>	
+	</resultMap>
+	
+	<select id="selectMember" parameterType="String" resultMap="memberMap">
+		WITH CARTVIEW AS (
+			SELECT	DISTINCT CART_MEMBER, CART_PROD
+			FROM	CART
+		), CARTPROD AS (
+			SELECT	CART_MEMBER
+					, PRODVIEW.*
+			FROM 	CARTVIEW INNER JOIN PRODVIEW ON (CART_PROD = PROD_ID)
+		)
 		SELECT 
-		    MEM_ID,    MEM_PASS,    MEM_NAME,
-		    MEM_REGNO1,    MEM_REGNO2,    TO_CHAR(MEM_BIR, 'YYYY-MM-DD')  MEM_BIR,
-		    MEM_ZIP,    MEM_ADD1,    MEM_ADD2,
-		    MEM_HOMETEL,    MEM_COMTEL,    MEM_HP, 
-		    MEM_MAIL,   MEM_JOB,    MEM_LIKE, 
-		    MEM_MEMORIAL,    TO_CHAR(MEM_MEMORIALDAY, 'YYYY-MM-DD') MEM_MEMORIALDAY,    MEM_MILEAGE,
-		    MEM_DELETE
-		FROM    MEMBER 
+		    MEM_ID
+		    ,    MEM_PASS
+		    ,    MEM_NAME
+		    , 	 MEM_REGNO1
+		    ,    MEM_REGNO2
+		    ,    TO_CHAR(MEM_BIR, 'YYYY-MM-DD')  MEM_BIR
+		    ,	 MEM_ZIP
+		    ,    MEM_ADD1
+		    ,    MEM_ADD2
+		    ,	 MEM_HOMETEL
+		    ,    MEM_COMTEL
+		    ,    MEM_HP
+		    ,    MEM_MAIL
+		    ,    MEM_JOB
+		    ,    MEM_LIKE
+		    ,    MEM_MEMORIAL
+		    ,    TO_CHAR(MEM_MEMORIALDAY, 'YYYY-MM-DD') MEM_MEMORIALDAY
+		    ,    MEM_MILEAGE
+		    ,    MEM_DELETE
+		    , 	 PROD_ID, PROD_NAME, PROD_COST, PROD_PRICE, PROD_MILEAGE
+		    ,	 LPROD_NM, BUYER_NAME, BUYER_ADD1, BUYER_CHARGER
+		FROM    MEMBER	LEFT OUTER JOIN CARTPROD ON (MEM_ID = CART_MEMBER)
 		WHERE MEM_ID = #{memId}
 	</select>
 	
@@ -85,7 +119,8 @@
 	</update>
 	
 	<delete id="deleteMember" parameterType="String">
-		DELETE FROM member
-		WHERE  mem_id = #{memId, jdbcType=VARCHAR}
+		UPDATE member
+		SET		mem_delete = '1'
+		WHERE  mem_id = #{memId}
 	</delete>
 </mapper>

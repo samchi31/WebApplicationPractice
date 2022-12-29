@@ -31,44 +31,48 @@ public class MemberDeleteControllerServlet extends HttpServlet {
 	
 	MemberService service = new MemberServiceImpl();
 	private static final Logger log = LoggerFactory.getLogger(MemberDeleteControllerServlet.class);
+	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		// 1 요청 분석 (검증 해줘야함)
 		req.setCharacterEncoding("UTF-8");
 		
 		HttpSession session = req.getSession();
-
-		MemberVO member = (MemberVO)session.getAttribute("authMember");
-		member.setMemPass(req.getParameter("memPass"));
-		req.setAttribute("member", member);
+		MemberVO authMember = (MemberVO)session.getAttribute("authMember");
+//		req.getUserPrincipal()	// 정상적인 인증시스템이면 null일수 없다
+		String memId = authMember.getMemId();
+		String memPass = req.getParameter("memPass");
+		
+		MemberVO inputData = new MemberVO();
+		inputData.setMemId(memId);
+		inputData.setMemPass(memPass);
+		
 		
 		String viewName = null;
 		
 		Map<String, List<String>> errors = new LinkedHashMap<String, List<String>>();
-		req.setAttribute("errors", errors);
-		boolean valid = ValidationUtils.validate(member, errors, DeleteGroup.class);
+		boolean valid = ValidationUtils.validate(inputData, errors, DeleteGroup.class);
 		
 		if(valid) {
-			ServiceResult result = service.removeMember(member);
-			System.out.println(member);
+			ServiceResult result = service.removeMember(inputData);
 			switch (result) {
 			case INVALIDPASSWORD:
-			case NOTEXIST:
-				req.setAttribute("message", "비밀번호 오류");
-				viewName = "member/memberView";
+				session.setAttribute("message", "비밀번호 오류");
+				viewName = "redirect:/mypage.do";
 				break;
 			case FAIL:
-				req.setAttribute("message", "서버 오류 , 쫌따 다시");
-				viewName = "member/memberView";
+				session.setAttribute("message", "서버 오류 , 쫌따 다시");
+				viewName = "redirect:/mypage.do";
 				break;
 
 			default:
-				session.removeAttribute("authMember");
+				session.invalidate();
 				viewName = "redirect:/";
 				break;
 			}
 		} else {
-			viewName = "member/memberView";
+			session.setAttribute("message", "아이디나 비밀번호 누락");
+			viewName = "redirect:/mypage.do";
 		}
 		
 		new InternalResourceViewResolver("/WEB-INF/views/", ".jsp").resolveView(viewName, req, resp);

@@ -1,9 +1,12 @@
 package kr.or.ddit.object;
 
+import org.openjdk.jol.vm.VM;
+import org.openjdk.jol.vm.VirtualMachine;
+
 public class StringPlayground {
 	public static void main(String[] args) {
 		String str1 = "SAMPLE";
-		str1 = str1 + "append";
+//		str1 = str1 + "append";
 		String str2 = "SAMPLE";
 		String str3 = new String("SAMPLE");
 		String str4 = new String(str1);
@@ -20,5 +23,11 @@ public class StringPlayground {
 		System.out.printf("str4==str2: %b \n", str4.intern() == str2);
 		System.out.printf("str4==str3: %b \n", str4.intern() == str3.intern());
 		
+		
+		VirtualMachine vm = VM.current();
+		System.out.println(vm.addressOf(str1));
+		System.out.println(vm.addressOf(str2));
+		System.out.println(vm.addressOf(str3));
+		System.out.println(vm.addressOf(str4));
 	}
 }

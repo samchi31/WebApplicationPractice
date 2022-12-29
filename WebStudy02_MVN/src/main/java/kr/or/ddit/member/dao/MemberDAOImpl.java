@@ -19,7 +19,6 @@ import kr.or.ddit.vo.MemberVO;
 public class MemberDAOImpl implements MemberDAO {
 	
 	private SqlSessionFactory sqlSessionFactory = MyBatisUtils.getSqlSessionFactory();
-	private Map<String, Statement> statementmap;
 	
 	@Override
 	public int insertMember(MemberVO member) {

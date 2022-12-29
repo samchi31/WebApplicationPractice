@@ -58,12 +58,9 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public ServiceResult removeMember(MemberVO member) {
-		MemberVO inputData = new MemberVO();
-		inputData.setMemId(member.getMemId());
-		inputData.setMemPass(member.getMemPass());
-		ServiceResult result = authService.authenticate(inputData);
+		ServiceResult result = authService.authenticate(member);
 		if(ServiceResult.OK.equals(result)) {
-			int rowcnt = memberDAO.deleteMember(inputData.getMemId());
+			int rowcnt = memberDAO.deleteMember(member.getMemId());
 			result = rowcnt > 0 ? ServiceResult.OK : ServiceResult.FAIL;
 		}
 		return result;

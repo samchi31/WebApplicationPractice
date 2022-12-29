@@ -30,6 +30,7 @@
 	<mappers>
 		<mapper resource="kr/or/ddit/mybatis/mappers/Memo.xml"/>
 		<mapper resource="kr/or/ddit/mybatis/mappers/Member.xml"/>
+		<mapper resource="kr/or/ddit/mybatis/mappers/Prod.xml"/>
 	</mappers>
 
 </configuration>

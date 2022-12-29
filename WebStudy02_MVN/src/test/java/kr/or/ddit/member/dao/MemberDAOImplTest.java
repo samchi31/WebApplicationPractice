@@ -30,28 +30,29 @@ public class MemberDAOImplTest {
 		dao.insertMember(member);
 	}
 
-	//@Test
+//	@Test
 	public void testSelectMemberList() {
 		List<MemberVO> memberList = dao.selectMemberList();
 		memberList.stream().forEach(System.out::println);
 	}
 
-//	@Test
+	@Test
 	public void testSelectMember() {
 		MemberVO member = dao.selectMember("a001");
 		System.out.println(member);
+		member.getProdList().stream().forEach(System.out::println);
 //		member=dao.selectMember("1q234");
 //		assertNull(member);
 	}
 
-	@Test
+//	@Test
 	public void testUpdateMember() {
 		int ret = dao.updateMember(member);
 	}
 
-	//@Test
+//	@Test
 	public void testDeleteMember() {
-		fail("Not yet implemented");
+		int ret = dao.deleteMember("b001");
 	}
 
 }
