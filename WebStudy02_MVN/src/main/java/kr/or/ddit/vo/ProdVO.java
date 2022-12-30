@@ -41,6 +41,9 @@ public class ProdVO implements Serializable{
 	private Integer prodQtysale;
 	private Integer prodMileage;
 	
+	private int rnum;
+	private int cartCount;
+	
 	private Set<MemberVO> memberSet;	// has many
 
 }

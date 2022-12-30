@@ -2,14 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.or.ddit.member.dao.MemberDAO">
 
-	<select id="selectMemberList" resultType="MemberVO">
-		SELECT MEM_ID, MEM_NAME, MEM_MAIL, MEM_HP, MEM_ADD1, MEM_MILEAGE 
-		, (
-		    SELECT  COUNT(DISTINCT CART_PROD) AS CART_COUNT
-		    FROM    CART	
-		    WHERE	CART_MEMBER = MEM_ID
-		)
-		FROM MEMBER
+	<!-- code fragment -->
+	<sql id="searchFrag">
+		<where>
+			<if test="simpleCondition neq null and @org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+				<choose>
+					<when test="simpleCondition.searchType eq 'name'">
+						INSTR(MEM_NAME, #{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'address'">
+						INSTR(MEM_ADD1, #{simpleCondition.searchWord}) > 0
+					</when>
+					<otherwise>
+						INSTR(MEM_NAME, #{simpleCondition.searchWord}) > 0
+						OR 	
+						INSTR(MEM_ADD1, #{simpleCondition.searchWord}) > 0
+					</otherwise>
+				</choose>				
+			</if>
+		</where>
+	</sql>
+	
+	<select id="selectTotalRecord" resultType="int" parameterType="PagingVO">
+		SELECT	COUNT(*)
+		FROM	MEMBER	
+		<include refid="searchFrag" />
+	</select>
+
+	<select id="selectMemberList" resultType="MemberVO" parameterType="PagingVO">		
+		SELECT	B.*
+		FROM	(
+			SELECT	A.*, ROWNUM AS RNUM
+			FROM	(		
+				SELECT MEM_ID, MEM_NAME, MEM_MAIL, MEM_HP, MEM_ADD1, MEM_MILEAGE 
+				, (
+				    SELECT  COUNT(DISTINCT CART_PROD) AS CART_COUNT
+				    FROM    CART	
+				    WHERE	CART_MEMBER = MEM_ID
+				)
+				FROM MEMBER	
+				<include refid="searchFrag" />
+				ORDER BY ROWID DESC)	A
+		)	B
+		<![CDATA[
+		WHERE RNUM >= #{startRow} AND RNUM <= #{endRow}
+		]]>
 	</select>
 	
 	<resultMap type="MemberVO" id="memberMap" autoMapping="true">

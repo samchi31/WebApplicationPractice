@@ -29,4 +29,66 @@
 		FROM    PRODVIEW LEFT OUTER JOIN CARTVIEW ON (PROD_ID = CART_PROD)
 		WHERE   PROD_ID = #{prodId}	
 	</select>
+	
+	<sql id="searchFrag">
+		<where>
+			<if test="simpleCondition neq null and @org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+				<choose>
+					<when test="simpleCondition.searchType eq 'lprodNm'">
+						INSTR(LPROD_NM, #{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'buyerName'">
+						INSTR(BUYER_NAME, #{simpleCondition.searchWord}) > 0
+					</when>
+					<when test="simpleCondition.searchType eq 'prodName'">
+						INSTR(PROD_NAME, #{simpleCondition.searchWord}) > 0
+					</when>
+					<otherwise>
+						INSTR(LPROD_NM, #{simpleCondition.searchWord}) > 0
+						OR
+						INSTR(BUYER_NAME, #{simpleCondition.searchWord}) > 0
+						OR
+						INSTR(PROD_NAME, #{simpleCondition.searchWord}) > 0					
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+	</sql>
+	
+	<select id="selectTotalRecord" resultType="int">
+		WITH CARTVIEW AS(
+		    SELECT  COUNT(MEM_ID) AS CNT, CART_PROD
+		    FROM    CART INNER JOIN MEMBER ON(CART_MEMBER = MEM_ID)
+		    GROUP   BY CART_PROD
+		)
+		SELECT  COUNT(*)
+		FROM    PRODVIEW LEFT OUTER JOIN CARTVIEW ON (PROD_ID = CART_PROD)
+		<include refid="searchFrag" />
+	</select>
+	
+	<select id="selectProdList" parameterType="PagingVO" resultMap="prodMap">
+		WITH CARTVIEW AS(
+		    SELECT  COUNT(MEM_ID) AS CNT, CART_PROD
+		    FROM    CART INNER JOIN MEMBER ON(CART_MEMBER = MEM_ID)
+		    GROUP   BY CART_PROD
+		)
+		SELECT  B.*
+		FROM    (
+		        SELECT  ROWNUM AS RNUM
+		                , A.*
+		        FROM    (
+		                SELECT  PROD_ID, PROD_NAME, PROD_PRICE, PROD_COST
+		                        , BUYER_NAME
+		                        , LPROD_NM
+		                        , NVL(CNT, 0) AS CART_COUNT
+		                FROM    PRODVIEW LEFT OUTER JOIN CARTVIEW ON (PROD_ID = CART_PROD)
+		                <include refid="searchFrag" />
+		                ORDER   BY PROD_ID) A
+		        ) B
+		<![CDATA[
+		WHERE  RNUM >= #{startRow} AND RNUM <= #{endRow}
+		]]>		
+	</select>
+	
+	
 </mapper>

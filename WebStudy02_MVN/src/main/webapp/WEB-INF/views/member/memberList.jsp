@@ -14,6 +14,7 @@
 <table>
 	<thead>
 		<tr>
+			<th>일련번호</th>
 			<th>회원아이디</th>
 			<th>회원명</th>
 			<th>이메일</th>
@@ -25,10 +26,12 @@
 	</thead>
 	
 	<tbody>
+		<c:set var="memberList" value="${pagingVO.dataList }" />
 		<c:choose>
 			<c:when test="${not empty memberList}">
 				<c:forEach items="${memberList }" var="member">
 					<tr>
+						<td>${member.rnum }</td>
 						<td>${member.memId }</td>
 						<td>
 							<c:url value="/member/memberView.do" var="viewURL">
@@ -51,11 +54,59 @@
 			</c:otherwise>
 		</c:choose>
 	</tbody>
+	<tfoot>
+		<tr>
+			<td colspan="7">
+				${pagingVO.pagingHTML }
+				<div id="searchUI">
+					<select name="searchType">
+						<option value>전체</option>
+						<option value="name">이름</option>
+						<option value="address">주소1</option>
+					</select>
+					<input type="text" name="searchWord" />
+					<input type="button" id="searchBtn" value="검색" />
+				</div>
+			</td>
+		</tr>
+	</tfoot>
 </table>
+
+<h4>hidden form</h4>
+<form id="searchForm">
+	<input type="text" name="page" />
+	<input type="text" name="searchType" />
+	<input type="text" name="searchWord" />
+</form>
 
 <jsp:include page="/includee/postScript.jsp" />
 <script type="text/javascript">
-
+	
+	$("[name=searchType]").val("${pagingVO.simpleCondition.searchType}");
+	$("[name=searchWord]").val("${pagingVO.simpleCondition.searchWord}");
+	
+	let searchForm = $("#searchForm");
+	let searchUI = $('#searchUI').on("click", "#searchBtn", function(){
+		let inputs = searchUI.find(":input[name]");
+		$.each(inputs, function(index, input){
+			let name = this.name;	
+			let value = $(this).val();
+			searchForm.find("[name="+name+"]").val(value);
+		});
+		searchForm.submit();
+	});
+	
+	$("a.paging").on('click', function(event){
+		event.preventDefault();
+		
+		let page = $(this).data('page');
+		if(!page) return false;
+		
+		searchForm.find("[name=page]").val(page);
+		searchForm.submit();
+		
+		return false;
+	});
 
 </script>
 </body>
