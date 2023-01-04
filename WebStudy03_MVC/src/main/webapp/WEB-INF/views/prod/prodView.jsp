@@ -6,9 +6,10 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<jsp:include page="/includee/preScript.jsp" />
 </head>
 <body>
-	<table>
+	<table class="table table-bordered">
 		<tr>
 			<th>상품아이디</th>
 			<td>${prod.prodId}</td>
@@ -24,7 +25,7 @@
 		<tr>
 			<th>거래처</th>
 			<td>
-				<table>
+				<table class="table table-bordered">
 					<thead>
 						<tr>
 							<th>거래처명</th>
@@ -150,6 +151,7 @@
 			</td>
 		</tr>
 	</table>
+<jsp:include page="/includee/postScript.jsp" />
 </body>
 </html>
 

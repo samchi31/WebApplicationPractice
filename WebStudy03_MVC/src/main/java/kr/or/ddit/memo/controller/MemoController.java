@@ -10,6 +10,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.management.RuntimeErrorException;
 import javax.servlet.ServletException;
@@ -26,23 +27,36 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import kr.or.ddit.memo.dao.MemoDAO;
 import kr.or.ddit.memo.dao.MemoDAOImpl;
+import kr.or.ddit.mvc.annotation.RequestMethod;
+import kr.or.ddit.mvc.annotation.resolvers.ModelAttribute;
+import kr.or.ddit.mvc.annotation.resolvers.RequestParam;
+import kr.or.ddit.mvc.annotation.stereotype.Controller;
+import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.vo.MemoVO;
-
-@WebServlet("/memo/*")
-public class MemoControllerServlet extends HttpServlet {
+@Controller
+public class MemoController {
 	
-	private static final Logger log = LoggerFactory.getLogger(MemoControllerServlet.class);
+	private static final Logger log = LoggerFactory.getLogger(MemoController.class);
 	
 //	private MemoDAO dao = FileSystemMemoDAOImpl.getInstance();
 //	private MemoDAO dao = DataBaseMemoDAOImpl.getInstance();
 //	pirvate MemoDAO dao;	// 결합력 낮아짐 -> 컨테이너 구조 필요 -> spring
 	private MemoDAO dao = new MemoDAOImpl();
 	
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@RequestMapping("/memo")
+	public String doGet(
+//			@RequestHeader("Accept") String accept,
+			HttpServletRequest req, HttpServletResponse resp
+	) throws ServletException, IOException {
 		//1 요청분석
 		String accept = req.getHeader("Accept");
 		log.info("accept header : {}", accept);
+		
+		if(accept.contains("xml")) {
+			resp.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE);
+			return null;
+		}
+		
 		//2 모델확보
 		List<MemoVO> memoList = dao.selectMemoList();		
 		
@@ -50,31 +64,23 @@ public class MemoControllerServlet extends HttpServlet {
 		req.setAttribute("target", memoList);
 		
 		//4 뷰 선택
-		String path = null;
-		if(accept.contains("json")) {
-			path = "/jsonView.do";
-		} else if(accept.contains("html")) {
-			path = "/06/memoView.jsp";
-		}
+		String path = "forward:/jsonView.do";
 		
-		//5 뷰 이동
-		if(path == null) {
-			resp.sendError(HttpServletResponse.SC_NOT_FOUND);
-		} else {
-			req.getRequestDispatcher(path).forward(req, resp);
-		}
+		return path;
 	}
 	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	@RequestMapping(value="/memo", method=RequestMethod.POST)
+	public String doPost(HttpServletRequest req) throws ServletException, IOException {
 		// Post(비동기)-(SC_300)Redirect-Get : PRG pattern (accept 헤더는 유지된다)		
 		
 		MemoVO memo = getMemoFromRequest(req);
 		int res = dao.insertMemo(memo);
 		
 		//redirect
-		String path = req.getContextPath() +"/memo";
-		resp.sendRedirect(path);
+//		String path = req.getContextPath() +"/memo";
+//		resp.sendRedirect(path);
+		
+		return "redirect:/memo";
 	}
 	
 	private MemoVO getMemoFromRequest(HttpServletRequest req) throws IOException {
@@ -117,9 +123,10 @@ public class MemoControllerServlet extends HttpServlet {
 //			return memo;
 //		} 
 	}
-
-	@Override
-	protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+	
+	@RequestMapping(value="/memo", method=RequestMethod.PUT)
+	public String doPut(HttpServletRequest req) throws ServletException, IOException {
+		
 		// 아니 put 요청 왤케 마니 오냐;; -> put은 표준메소드 아님 그래서 redirect 처리를 ajax 안해줌 수동으로 해줘야함
 		MemoVO memo = getMemoFromRequest(req);
 		System.out.println(memo);
@@ -130,26 +137,37 @@ public class MemoControllerServlet extends HttpServlet {
 //		resp.sendRedirect(path);
 		// 수동으로 redirect 해줄거임 그래서 그냥 forward
 		req.setAttribute("location", req.getContextPath() +"/memo");
-		req.getRequestDispatcher("/jsonView.do").forward(req, resp);
+//		req.getRequestDispatcher("/jsonView.do").forward(req, resp);
+		return "forward:/jsonView.do";
 	}
 	
-	@Override
-	protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 왜 한번 더 들어올까???
-		String pathInfo = req.getPathInfo();
-		if(pathInfo == null) {
-			return;
-		}
-		int code = Integer.parseInt(pathInfo.split("/")[1]);
+	@RequestMapping(value="/memo", method=RequestMethod.DELETE)
+	public String doDelete(HttpServletRequest req) throws ServletException, IOException {
+		String requestURI = req.getRequestURI();
+		String viewName = null;
+		
+		String strCode = Optional.of(requestURI)
+							  .map(uri->uri.substring(req.getContextPath().length()))
+							  .map(uri->uri.substring("/memo/".length()))
+							  .get();
+		int code = Integer.parseInt(strCode);
+		
+//		// 왜 한번 더 들어올까???
+//		String pathInfo = req.getPathInfo();
+//		if(pathInfo == null) {
+//			return null;
+//		}
+//		int code = Integer.parseInt(pathInfo.split("/")[1]);
 //		System.out.println(code);
 		int ret = dao.deleteMemo(code);
 		
-//		//redirect
-//		String path = req.getContextPath() +"/memo";
-//		resp.sendRedirect(path);
-		// 수동으로 redirect 해줄거임 그래서 그냥 forward
+////		//redirect
+////		String path = req.getContextPath() +"/memo";
+////		resp.sendRedirect(path);
+//		// 수동으로 redirect 해줄거임 그래서 그냥 forward
 		req.setAttribute("location", req.getContextPath() +"/memo");
-		req.getRequestDispatcher("/jsonView.do").forward(req, resp);
+//		req.getRequestDispatcher("/jsonView.do").forward(req, resp);
+		return "forward:/jsonView.do";
 	}
 }
 

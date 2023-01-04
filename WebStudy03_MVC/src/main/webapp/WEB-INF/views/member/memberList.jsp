@@ -11,7 +11,7 @@
 <body>
 <h4>회원목록 조회</h4>
 
-<table>
+<table class="table table-bordered">
 	<thead>
 		<tr>
 			<th>일련번호</th>
@@ -82,8 +82,8 @@
 <jsp:include page="/includee/postScript.jsp" />
 <script type="text/javascript">
 	
-	$("[name=searchType]").val("${searchvo.searchType}");
-	$("[name=searchWord]").val("${searchvo.searchWord}");
+	$("[name=searchType]").val("${searchVO.searchType}");
+	$("[name=searchWord]").val("${searchVO.searchWord}");
 	
 	let searchForm = $("#searchForm");
 	let searchUI = $('#searchUI').on("click", "#searchBtn", function(){

@@ -20,28 +20,27 @@ import org.slf4j.LoggerFactory;
 import kr.or.ddit.enumpkg.ServiceResult;
 import kr.or.ddit.member.service.MemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
+import kr.or.ddit.mvc.annotation.RequestMethod;
+import kr.or.ddit.mvc.annotation.resolvers.RequestParam;
+import kr.or.ddit.mvc.annotation.stereotype.Controller;
+import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.mvc.view.InternalResourceViewResolver;
 import kr.or.ddit.validate.DeleteGroup;
 import kr.or.ddit.validate.UpdateGroup;
 import kr.or.ddit.validate.ValidationUtils;
 import kr.or.ddit.vo.MemberVO;
 
-@WebServlet("/member/memberDelete.do")
-public class MemberDeleteControllerServlet extends HttpServlet {
+@Controller
+public class MemberDeleteController {
 	
 	MemberService service = new MemberServiceImpl();
-	private static final Logger log = LoggerFactory.getLogger(MemberDeleteControllerServlet.class);
+	private static final Logger log = LoggerFactory.getLogger(MemberDeleteController.class);
 	
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 1 요청 분석 (검증 해줘야함)
-		req.setCharacterEncoding("UTF-8");
-		
-		HttpSession session = req.getSession();
+	@RequestMapping(value="/member/memberDelete.do", method=RequestMethod.POST)
+	public String doPost(@RequestParam("memPass") String memPass, HttpSession session) throws ServletException, IOException {
 		MemberVO authMember = (MemberVO)session.getAttribute("authMember");
 //		req.getUserPrincipal()	// 정상적인 인증시스템이면 null일수 없다
 		String memId = authMember.getMemId();
-		String memPass = req.getParameter("memPass");
 		
 		MemberVO inputData = new MemberVO();
 		inputData.setMemId(memId);
@@ -74,7 +73,6 @@ public class MemberDeleteControllerServlet extends HttpServlet {
 			session.setAttribute("message", "아이디나 비밀번호 누락");
 			viewName = "redirect:/mypage.do";
 		}
-		
-		new InternalResourceViewResolver("/WEB-INF/views/", ".jsp").resolveView(viewName, req, resp);
+		return viewName;
 	}
 }

@@ -113,4 +113,6 @@ public class MemberVO implements Serializable{
 	
 	private List<ProdVO> prodList;
 	
+	private String memRole;
+	
 }

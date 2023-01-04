@@ -85,8 +85,10 @@
 	$("[name=prodLgu]").on('change', function(){
 			//console.log($(this).find("option:selected").val());
 			let prodLgu = $(this).val();
-			prodBuyerTag.find("option:gt(0)").hide();
-			prodBuyerTag.find("option."+prodLgu).show();	
+			if(prodLgu){
+				prodBuyerTag.find("option:gt(0)").hide();
+				prodBuyerTag.find("option."+prodLgu).show();	
+			}
 		})/* .val("${detailCondition.prodLgu}") */;
 	
 	let prodBuyerTag = $("[name=prodBuyer]")/* .val("${detailCondition.prodBuyer}") */;	

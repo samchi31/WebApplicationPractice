@@ -5,6 +5,44 @@
     <welcome-file>index.do</welcome-file>
   </welcome-file-list>
   
+  <!-- 필터 등록 순서 -> 필터 실행 순서 -->
+<!--   <filter> -->
+<!--   	<filter-name>BlindFilter</filter-name> -->
+<!--   	<filter-class>kr.or.ddit.filter.BlindFilter</filter-class> -->
+<!--   </filter> -->
+<!--   <filter-mapping> -->
+<!--   	<filter-name>BlindFilter</filter-name> -->
+<!--   	<url-pattern>/*</url-pattern> 모든요청 -->
+<!--   </filter-mapping> -->
+<!--   <filter> -->
+<!--   	<filter-name>DummyFilter</filter-name> -->
+<!--   	<filter-class>kr.or.ddit.filter.DummyFilter</filter-class> -->
+<!--   </filter> -->
+<!--   <filter-mapping> -->
+<!--   	<filter-name>DummyFilter</filter-name> -->
+<!--   	<url-pattern>*.do</url-pattern> -->
+<!--   </filter-mapping> -->
+  <filter>
+  	<filter-name>AuthenticationFilter</filter-name>
+  	<filter-class>kr.or.ddit.auth.AuthenticationFilter</filter-class>
+  	<init-param>
+  		<param-name>filePath</param-name>
+  		<param-value>/kr/or/ddit/SecuredResources.properties</param-value>
+  	</init-param>
+  </filter>
+  <filter-mapping>
+  	<filter-name>AuthenticationFilter</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <filter>
+  	<filter-name>AuthorizationFilter</filter-name>
+  	<filter-class>kr.or.ddit.auth.AuthorizationFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>AuthorizationFilter</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
   <servlet>
   	<servlet-name>frontController</servlet-name>
   	<servlet-class>kr.or.ddit.mvc.DispatcherServlet</servlet-class>
@@ -13,6 +51,7 @@
   <servlet-mapping>
   	<servlet-name>frontController</servlet-name>
   	<url-pattern>*.do</url-pattern>
+  	<url-pattern>/memo/*</url-pattern>
   	<url-pattern>/index.do</url-pattern>
   </servlet-mapping>
 </web-app>

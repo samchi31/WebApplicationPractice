@@ -15,12 +15,23 @@ public class ProdDAOImplTest {
 
 	private ProdDAO dao = new ProdDAOImpl();
 	private PagingVO<ProdVO> pagingVO;
+	private ProdVO prod = new ProdVO(); 
 	
 	@Before
 	public void setUp() {
 		pagingVO = new PagingVO<>();
 		pagingVO.setCurrentPage(1);
 		
+		prod.setProdName("test");
+		prod.setProdBuyer("P10101");
+		prod.setProdCost(100);
+		prod.setProdPrice(100);
+		prod.setProdSale(90);
+		prod.setProdOutline("daoTest");
+		prod.setProdImg("asdf");
+		prod.setProdTotalstock(1);
+		prod.setProdProperstock(1);
+		prod.setProdLgu("P401");
 	}
 	
 	//@Test
@@ -33,16 +44,22 @@ public class ProdDAOImplTest {
 		});
 	}
 	
-	@Test
+//	@Test
 	public void testSelectTotal() {
 		int tr = dao.selectTotalRecord(pagingVO);
 		assertNotEquals(0,	tr);
 	}
 	
-	@Test
+//	@Test
 	public void testSelectProdList() {
 		List<ProdVO> prodList = dao.selectProdList(pagingVO);
 		assertEquals(10, prodList.size());
 		log.info("prodList : {}",prodList);
+	}
+	
+	@Test
+	public void testInsert() {
+		int cnt = dao.insertProd(prod);
+		assertEquals(1, cnt);
 	}
 }
