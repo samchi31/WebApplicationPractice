@@ -8,6 +8,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import kr.or.ddit.mvc.multipart.MultipartFile;
 import kr.or.ddit.validate.UpdateGroup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -47,7 +48,8 @@ public class ProdVO implements Serializable{
 	private String prodOutline;
 	private String prodDetail;
 	@NotBlank
-	private String prodImg;
+	private String prodImg;		// PROD 테이블 조회용 프로퍼티
+	private MultipartFile prodImage;		// form 저장 프로퍼티
 	@NotNull
 	@Min(0)
 	private Integer prodTotalstock;

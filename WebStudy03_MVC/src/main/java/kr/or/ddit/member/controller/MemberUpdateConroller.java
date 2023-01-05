@@ -20,13 +20,17 @@ import kr.or.ddit.member.service.MemberService;
 import kr.or.ddit.member.service.MemberServiceImpl;
 import kr.or.ddit.mvc.annotation.RequestMethod;
 import kr.or.ddit.mvc.annotation.resolvers.ModelAttribute;
+import kr.or.ddit.mvc.annotation.resolvers.RequestPart;
 import kr.or.ddit.mvc.annotation.stereotype.Controller;
 import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
+import kr.or.ddit.mvc.multipart.MultipartFile;
+import kr.or.ddit.mvc.multipart.MultipartHttpServletRequest;
 import kr.or.ddit.mvc.view.InternalResourceViewResolver;
 import kr.or.ddit.validate.UpdateGroup;
 import kr.or.ddit.validate.ValidationUtils;
 import kr.or.ddit.vo.MemberVO;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Controller
 public class MemberUpdateConroller {
 	
@@ -49,9 +53,16 @@ public class MemberUpdateConroller {
 	public String updateProcess(
 			@ModelAttribute("member") MemberVO member
 			, HttpServletRequest req
-	) {		
-		String viewName = null;
+			, @RequestPart(value="memImage", required=false) MultipartFile memImage
+	) throws IOException {		
 		
+//		if(req instanceof MultipartHttpServletRequest) {
+//			// memImage -> memImg			
+//			MultipartFile memImage = ((MultipartHttpServletRequest)req).getFile("memImage");
+			member.setMemImage(memImage);
+//		}
+		
+		String viewName = null;
 		Map<String, List<String>> errors = new LinkedHashMap<String, List<String>>();
 		req.setAttribute("errors", errors);
 		boolean valid = ValidationUtils.validate(member, errors, UpdateGroup.class);

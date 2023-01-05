@@ -15,15 +15,18 @@ import kr.or.ddit.mvc.annotation.stereotype.Controller;
 import kr.or.ddit.mvc.annotation.stereotype.RequestMapping;
 import kr.or.ddit.mvc.view.InternalResourceViewResolver;
 import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.MemberVOWrapper;
 @Controller
 public class MypageControllerServlet{
 	
 	private MemberService service = new MemberServiceImpl();
 	
 	@RequestMapping("/mypage.do")
-	public String doGet(HttpServletRequest req, HttpSession session) throws ServletException, IOException {
-		
-		MemberVO authMember = (MemberVO)session.getAttribute("authMember");
+	public String doGet(HttpServletRequest req
+			, MemberVOWrapper principal) throws ServletException, IOException {
+//		MemberVOWrapper principal = (MemberVOWrapper)req.getUserPrincipal();
+//		MemberVO authMember = (MemberVO)session.getAttribute("authMember");
+		MemberVO authMember = principal.getRealMember();
 		
 		MemberVO member = service.retrieveMember(authMember.getMemId());
 		

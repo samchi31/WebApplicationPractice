@@ -143,22 +143,22 @@ public class MemoController {
 	
 	@RequestMapping(value="/memo", method=RequestMethod.DELETE)
 	public String doDelete(HttpServletRequest req) throws ServletException, IOException {
-		String requestURI = req.getRequestURI();
-		String viewName = null;
-		
-		String strCode = Optional.of(requestURI)
-							  .map(uri->uri.substring(req.getContextPath().length()))
-							  .map(uri->uri.substring("/memo/".length()))
-							  .get();
-		int code = Integer.parseInt(strCode);
+//		String requestURI = req.getRequestURI();
+//		String viewName = null;
+//		
+//		String strCode = Optional.of(requestURI)
+//							  .map(uri->uri.substring(req.getContextPath().length()))
+//							  .map(uri->uri.substring("/memo/".length()))
+//							  .get();
+//		int code = Integer.parseInt(strCode);
 		
 //		// 왜 한번 더 들어올까???
-//		String pathInfo = req.getPathInfo();
-//		if(pathInfo == null) {
-//			return null;
-//		}
-//		int code = Integer.parseInt(pathInfo.split("/")[1]);
-//		System.out.println(code);
+		String pathInfo = req.getPathInfo();
+		if(pathInfo == null) {
+			return null;
+		}
+		int code = Integer.parseInt(pathInfo.split("/")[1]);
+		System.out.println(code);
 		int ret = dao.deleteMemo(code);
 		
 ////		//redirect

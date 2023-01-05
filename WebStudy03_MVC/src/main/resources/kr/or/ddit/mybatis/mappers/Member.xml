@@ -86,6 +86,7 @@
 		    ,    MEM_MILEAGE
 		    ,    MEM_DELETE
 		    ,	 MEM_ROLE
+		    ,	 MEM_IMG
 		    , 	 PROD_ID, PROD_NAME, PROD_COST, PROD_PRICE, PROD_MILEAGE
 		    ,	 LPROD_NM, BUYER_NAME, BUYER_ADD1, BUYER_CHARGER
 		FROM    MEMBER	LEFT OUTER JOIN CARTPROD ON (MEM_ID = CART_MEMBER)
@@ -110,9 +111,10 @@
 		    mem_job,
 		    mem_like,
 		    mem_memorial,
-		    mem_memorialday,
-		    mem_mileage,
-		    mem_delete
+		    mem_memorialday
+		    <if test="memImg neq null and memImg.length gt 0">
+		    , mem_img		    
+		    </if>
 		) VALUES (
 		 	#{memId, jdbcType=VARCHAR}
 			, #{memPass, jdbcType=VARCHAR}
@@ -131,8 +133,9 @@
 			, #{memLike, jdbcType=VARCHAR}
 			, #{memMemorial, jdbcType=VARCHAR}
 			, TO_DATE(#{memMemorialday, jdbcType=DATE}, 'YYYY-MM-DD')
-			, #{memMileage, jdbcType=NUMERIC}
-			, #{memDelete, jdbcType=VARCHAR}
+			<if test="memImg neq null and memImg.length gt 0">
+		    , #{memImg, jdbcType=BLOB}		    
+		    </if>
 		)
 	</insert>
 	
@@ -152,6 +155,9 @@
 			, mem_like = #{memLike, jdbcType=VARCHAR}
 			, mem_memorial = #{memMemorial, jdbcType=VARCHAR}
 			, mem_memorialday = TO_DATE(#{memMemorialday, jdbcType=DATE}, 'YYYY-MM-DD')
+			<if test="memImg neq null and memImg.length gt 0">
+		    , mem_img = #{memImg, jdbcType=BLOB}		    
+		    </if>
 		WHERE
 		    mem_id = #{memId, jdbcType=VARCHAR}
 	</update>

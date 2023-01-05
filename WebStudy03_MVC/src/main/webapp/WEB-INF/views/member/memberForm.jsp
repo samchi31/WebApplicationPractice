@@ -15,7 +15,7 @@
 </head>
 <body>
 	<h4>가입 양식</h4>
-	<form method="post">
+	<form method="post" enctype="multipart/form-data">
 		<table>
 			<tr>
 				<th>회원아이디</th>
@@ -31,6 +31,13 @@
 				<th>회원명</th>
 				<td><input class="form-control" type="text"  name="memName" value="${member.memName}" />
 				<span class="text-danger">${errors.memName}</span></td>
+			</tr>
+			<tr>
+				<th>회원프로필</th>
+				<td>
+					<input type="file" name="memImage" accept="image/*" />
+					<span class="text-danger">${errors.memImage }</span>
+				</td>
 			</tr>
 			<tr>
 				<th>주민번호1</th>
@@ -102,16 +109,7 @@
 				<td><input class="form-control" type="date" name="memMemorialday" value="${member.memMemorialday}" />
 				<span class="text-danger">${errors.memMemorialday}</span></td>
 			</tr>
-			<tr>
-				<th>마일리지</th>
-				<td><input class="form-control" type="number" name="memMileage" value="${member.memMileage}" />
-				<span class="text-danger">${errors.memMileage}</span></td>
-			</tr>
-			<tr>
-				<th>탈퇴여부</th>
-				<td><input class="form-control" type="text" name="memDelete" value="${member.memDelete}" />
-				<span class="text-danger">${errors.memDelete}</span></td>
-			</tr>
+			
 			<tr>
 				<td colspan="2"><input type="submit" class="btn btn-success" value="저장"></td>
 			</tr>

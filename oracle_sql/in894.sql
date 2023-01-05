@@ -130,3 +130,6 @@ update member
 set mem_role = 'ROLE_ADMIN'
 where mem_id = 'z001';
 commit;
+
+desc prod;
+select prod_img from prod;

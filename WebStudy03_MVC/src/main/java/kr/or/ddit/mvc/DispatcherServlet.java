@@ -39,7 +39,7 @@ public class DispatcherServlet extends HttpServlet {
 	
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		req.setCharacterEncoding("UTF-8");
+		
 //		String requestURI = req.getRequestURI(); 	// contextPath 포함
 //		requestURI = requestURI.substring(req.getContextPath().length());
 		String requestURI = req.getServletPath();
