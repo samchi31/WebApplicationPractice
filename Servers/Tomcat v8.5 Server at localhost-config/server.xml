@@ -61,6 +61,10 @@
          Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
     -->
     <Connector URIEncoding="UTF-8" connectionTimeout="20000" port="80" protocol="HTTP/1.1" redirectPort="443" useBodyEncodingForURI="true"/>
+    <Connector port="443" protocol="org.apache.coyote.http11.Http11Protocol"
+		maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
+		keystoreFile="D:/B_Util/cert/local_cert/keystore" keystorePass="java"
+		keystoreType="pkcs12" clientAuth="false" sslProtocol="TLS" />
     <!-- A "Connector" using the shared thread pool-->
     <!--
     <Connector executor="tomcatThreadPool"

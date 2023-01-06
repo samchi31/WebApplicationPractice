@@ -36,8 +36,9 @@ public class ProdServiceImpl implements ProdService {
 
 	@Override
 	public ServiceResult modifyProd(ProdVO prod) {
-		// TODO Auto-generated method stub
-		return null;
+		retrieveProd(prod.getProdId());	// 없으면 runtimeException 발생
+		int cnt = prodDao.updateProd(prod);
+		return cnt > 0 ? ServiceResult.OK : ServiceResult.FAIL;
 	}
 
 }

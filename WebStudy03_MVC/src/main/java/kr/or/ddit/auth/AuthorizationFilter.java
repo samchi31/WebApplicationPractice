@@ -45,13 +45,14 @@ public class AuthorizationFilter implements Filter {
 		 boolean pass = true;
 		 String uri = req.getServletPath();
 		 
+		 // 로그인이 필요한 페이지에 접속 여부
 		 if(securedResources.containsKey(uri)) {
-			 String[] resRoles = securedResources.get(uri);
-//			 MemberVO authMember = (MemberVO)session.getAttribute("authMember");
-			 MemberVOWrapper principal = (MemberVOWrapper)req.getUserPrincipal();
+			 String[] resRoles = securedResources.get(uri);		// 접속한 페이지의 권한 String 가져오기
+//			 MemberVO authMember = (MemberVO)session.getAttribute("authMember");	
+			 MemberVOWrapper principal = (MemberVOWrapper)req.getUserPrincipal();	// principal에 저장된 유저 정보
 			 MemberVO authMember = principal.getRealMember();
 			 String memRole = authMember.getMemRole();
-			 pass = Arrays.stream(resRoles).anyMatch(ele -> ele.equals(memRole));
+			 pass = Arrays.stream(resRoles).anyMatch(ele -> ele.equals(memRole));	// 권한이랑 비교
 		 }
 		 
 		 if(pass) {

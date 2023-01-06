@@ -61,6 +61,7 @@ public class AuthenticationFilter implements Filter{
 		
 		boolean pass = true;
 		
+		// 로그인이 필요한 페이지에 접속 여부
 		if(securedResources.containsKey(uri)) {
 			Principal principal = req.getUserPrincipal(); 	// null이면 인증안된 유저
 //			// 보호 자원
@@ -71,7 +72,7 @@ public class AuthenticationFilter implements Filter{
 			}
 		}
 		
-		if(pass) {
+		if(pass) {	// 로그인이 필요하지 않은 페이지거나 로그인이 필요한 페이지이고 로그인한 경우
 			chain.doFilter(request, response);			
 		} else {
 			// 신원확인을 거치지 않은 사용자인 경우 loginform 이동, redirect

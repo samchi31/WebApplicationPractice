@@ -127,4 +127,26 @@
 			, #{prodMileage,jdbcType=NUMERIC}
 		)
 	</insert>
+	
+	<update id="updateProd" parameterType="ProdVO">
+		UPDATE prod 
+		SET 
+		    PROD_NAME = #{prodName,jdbcType=VARCHAR}
+		    , PROD_LGU = #{prodLgu,jdbcType=CHAR}
+		    , PROD_BUYER = #{prodBuyer,jdbcType=CHAR}
+		    , PROD_COST = #{prodCost,jdbcType=NUMERIC}
+		    , PROD_PRICE = #{prodPrice,jdbcType=NUMERIC}
+		    , PROD_SALE = #{prodSale,jdbcType=NUMERIC}
+		    , PROD_OUTLINE = #{prodOutline,jdbcType=VARCHAR}
+		    , PROD_DETAIL = #{prodDetail,jdbcType=CLOB}
+		    , PROD_TOTALSTOCK = #{prodTotalstock,jdbcType=NUMERIC}
+		    , PROD_INSDATE = #{prodInsdate,jdbcType=DATE}
+		    , PROD_PROPERSTOCK = #{prodProperstock,jdbcType=NUMERIC}
+		    , PROD_SIZE = #{prodSize,jdbcType=VARCHAR}
+		    , PROD_COLOR = #{prodColor,jdbcType=VARCHAR}
+		    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(prodImg)">
+		    , PROD_IMG = #{prodImg,jdbcType=VARCHAR}		    
+		    </if>		    
+		WHERE prod_id = #{prodId, jdbcType=VARCHAR}
+	</update>
 </mapper>

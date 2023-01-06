@@ -114,6 +114,16 @@
 			<td>${prod.prodMileage}</td>
 		</tr>
 		<tr>
+			<td colspan="2">
+				<c:url value="/prod/prodList.do" var="listURL"/>
+				<a class="btn btn-secondary" href="${listURL }">목록으로</a>
+				<c:url value="/prod/prodUpdate.do" var="updateURL">
+					<c:param name="what" value="${prod.prodId }"></c:param>
+				</c:url>
+				<a class="btn btn-primary" href="${updateURL }">수정</a>
+			</td>
+		</tr>
+		<tr>
 			<th>구매자목록</th>
 			<td>
 				<table>

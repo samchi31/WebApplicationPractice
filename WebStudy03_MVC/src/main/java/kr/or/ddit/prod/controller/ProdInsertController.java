@@ -62,27 +62,39 @@ public class ProdInsertController {
 //			// prodImage -> prodImg
 //			// 저장 , metadata 추출, db 저장 (prodImg)
 //			
-//			MultipartFile prodImage = wrapperReq.getFile("prodImage");
-			if(prodImage != null && !prodImage.isEmpty()) {
-				// 1. 저장
-				String saveFolderURL = "/resources/prodImages";
-				ServletContext application = req.getServletContext();
-				String saveFolderPath = application.getRealPath(saveFolderURL);
-				File saveFolder = new File(saveFolderPath);
-				if(!saveFolder.exists()) {
-					saveFolder.mkdirs();
-				}
-				
-				// 2. metadata 추출
-				String saveFilename = UUID.randomUUID().toString();
-				prodImage.transferTo(new File(saveFolder, saveFilename));
-				
-				// 3. db 저장
-				prod.setProdImg(saveFilename);
-				
-			}
+//			MultipartFile prodImage = wrapperReq.getFile("prodImage");	
+		
+//			if(prodImage != null && !prodImage.isEmpty()) {
+//				// 1. 저장
+//				String saveFolderURL = "/resources/prodImages";
+//				ServletContext application = req.getServletContext();
+//				String saveFolderPath = application.getRealPath(saveFolderURL);
+//				File saveFolder = new File(saveFolderPath);
+//				if(!saveFolder.exists()) {
+//					saveFolder.mkdirs();
+//				}
+//				
+//				// 2. metadata 추출
+//				String saveFilename = UUID.randomUUID().toString();
+//				prodImage.transferTo(new File(saveFolder, saveFilename));
+//				
+//				// 3. db 저장
+//				prod.setProdImg(saveFilename);
+//				
+//			}
 //		}
 //		
+		prod.setProdImage(prodImage); // null, blank, mimetype 체크
+		// 1. 저장
+		String saveFolderURL = "/resources/prodImages";
+		ServletContext application = req.getServletContext();
+		String saveFolderPath = application.getRealPath(saveFolderURL);
+		File saveFolder = new File(saveFolderPath);
+		if(!saveFolder.exists()) {
+			saveFolder.mkdirs();
+		}		
+		prod.saveTo(saveFolder);
+				
 		Map<String, List<String>> errors = new HashMap<>();
 		req.setAttribute("errors", errors);
 		boolean valid = ValidationUtils.validate(prod, errors, InsertGroup.class);

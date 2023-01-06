@@ -5,7 +5,7 @@
     <welcome-file>index.do</welcome-file>
   </welcome-file-list>
   
-  <!-- 필터 등록 순서 -> 필터 실행 순서 -->
+  <!-- 필터 등록 순서 = 필터 실행 순서 -->
 
   <filter>
   	<filter-name>CharacterEncodingFilter</filter-name>
@@ -23,14 +23,6 @@
   	<filter-name>CharacterEncodingFilter</filter-name>
   	<url-pattern>/*</url-pattern>
   </filter-mapping>  
-  <filter>
-  	<filter-name>MultipartFilter</filter-name>
-  	<filter-class>kr.or.ddit.mvc.multipart.MultipartFilter</filter-class>
-  </filter>
-  <filter-mapping>
-  	<filter-name>MultipartFilter</filter-name>
-  	<url-pattern>/*</url-pattern>
-  </filter-mapping>
   <filter>
   	<filter-name>GeneratePrincipalFilter</filter-name>
   	<filter-class>kr.or.ddit.auth.GeneratePrincipalFilter</filter-class>
@@ -59,7 +51,14 @@
 <!--   	<filter-name>AuthorizationFilter</filter-name> -->
 <!--   	<url-pattern>/*</url-pattern> -->
 <!--   </filter-mapping> -->
-  
+  <filter>
+  	<filter-name>MultipartFilter</filter-name>
+  	<filter-class>kr.or.ddit.mvc.multipart.MultipartFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>MultipartFilter</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
   
   <servlet>
   	<servlet-name>frontController</servlet-name>

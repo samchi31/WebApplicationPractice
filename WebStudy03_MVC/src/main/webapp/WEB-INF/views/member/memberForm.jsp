@@ -35,7 +35,7 @@
 			<tr>
 				<th>회원프로필</th>
 				<td>
-					<input type="file" name="memImage" accept="image/*" />
+					<input type="file" class="form-control" name="memImage" accept="image/*" />
 					<span class="text-danger">${errors.memImage }</span>
 				</td>
 			</tr>
