@@ -26,29 +26,16 @@ public class RequestPartMethodArgumentResolver implements HandlerMethodArgumentR
 	@Override
 	public Object resolveArgument(Parameter parameter, HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-//		Class<?> parameterType = parameter.getType();
-//		RequestPart requestPart = parameter.getAnnotation(RequestPart.class);
-//		if(req instanceof MultipartHttpServletRequest) {
-//			MultipartFile file = ((MultipartHttpServletRequest) req).getFile(requestPart.value());
-//			if(requestPart.required() && (file == null || file.isEmpty())) {
-//				throw new RequestParamMethodArgumentResolver.BadRequestException("필수 파일 누락");
-//			} 
-//			return file;
-//		} else {
-//			throw new RequestParamMethodArgumentResolver.BadRequestException("멀티파트 요청이 아님");
-//		}
-		
 		Class<?> parameterType = parameter.getType();
 		RequestPart requestPart = parameter.getAnnotation(RequestPart.class);
-		
 		if(req instanceof MultipartHttpServletRequest) {
 			MultipartFile file = ((MultipartHttpServletRequest) req).getFile(requestPart.value());
-			if(requestPart.required() && (file==null || file.isEmpty())) {
+			if(requestPart.required() && (file == null || file.isEmpty())) {
 				throw new RequestParamMethodArgumentResolver.BadRequestException("필수 파일 누락");
-			}
+			} 
 			return file;
-		}else {
-			throw new RequestParamMethodArgumentResolver.BadRequestException("멀티 파트 요청이 아님");
+		} else {
+			throw new RequestParamMethodArgumentResolver.BadRequestException("멀티파트 요청이 아님");
 		}
 		
 	}

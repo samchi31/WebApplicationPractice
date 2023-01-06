@@ -27,7 +27,7 @@ public class MultipartHttpServletRequest extends HttpServletRequestWrapper{
 	
 	private void parseRequest(HttpServletRequest request) throws IOException, ServletException {
 		fileMap = new LinkedHashMap<>();
-		request.getParts().stream().filter(p -> p.getContentType()!=null)
+		request.getParts().stream().filter(p -> p.getContentType()!=null)	// part가 file인지 확인
 									.forEach(p -> {
 										String partName = p.getName();
 										MultipartFile file = new StandardServletMultipartFile(p);
