@@ -27,12 +27,19 @@
 	</build>
 	
 	<dependencies>
+		<!-- Spring DI Container -->
 		<dependency>
 		    <groupId>org.springframework</groupId>
 		    <artifactId>spring-context</artifactId>
 		    <version>${org.springframework-version}</version>
-		</dependency>	
+		</dependency>
 	
+	    <dependency>
+		    <groupId>javax.inject</groupId>
+		    <artifactId>javax.inject</artifactId>
+		    <version>1</version>
+		</dependency>
+		
 		<!-- lombok Javabean 규약 지원-->
 		<dependency>
 		    <groupId>org.projectlombok</groupId>
