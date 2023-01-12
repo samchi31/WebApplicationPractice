@@ -9,7 +9,7 @@
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
-	<!-- HandlerMapping, HandlerAdapter, ViewResolver, Validator 등의 MVC 프로그래밍 모델이서 사용될 정략 객체들으 자동 등록 -->
+	<!-- HandlerMapping, HandlerAdapter, ViewResolver, Validator 등의 MVC 프로그래밍 모델이서 사용될 전략 객체들을 자동 등록 -->
 	<mvc:annotation-driven validator="validator"></mvc:annotation-driven>
 	
 	<!-- 이름을 반드시 messageSource, H.A 가 injection 받는다  -->
@@ -22,10 +22,17 @@
 		p:validationMessageSource-ref="messageSource"
 	/>
 	
+	<!-- v.r는 제어권을 다음으로 넘겨주지면 IRVR은 아님(404d에러 응답) -> 항상 젤 끝 resolver 여야 한다(order 생략) -->
 	<bean id="IRVR" class="org.springframework.web.servlet.view.InternalResourceViewResolver"
 		p:prefix="/WEB-INF/views/"
 		p:suffix=".jsp"
 	/>
+	
+	<bean id="BNVR" class="org.springframework.web.servlet.view.BeanNameViewResolver" 
+		p:order="1"
+	/>
+	
+	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
 	
 	<!-- Controller layer를 bean으로 등록하기 위한 필터링 설정 -->
 	<context:component-scan base-package="kr.or.ddit" use-default-filters="false">
@@ -52,5 +59,8 @@
 		</mvc:interceptor>
 	</mvc:interceptors>
 	
+	<!-- mapping 형태로 들어오는 요청을 location으로 -->
+	<!-- 정적 자원이 일괄 관리 되는 경우 활용 -->
 	<mvc:resources location="/resources/" mapping="/resources/**" cache-period="0" />
+	<!-- 따로 있는경우 default servlet 설정 사용 -->
 </beans>
