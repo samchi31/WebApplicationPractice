@@ -39,7 +39,7 @@
 		p:configuration-ref="configuration"
 	/>
 	
-	<!-- dao 구현체 대신 -->
+	<!-- dao 구현체 대신 scan해서 proxy 생성 -->
 	<mybatis-spring:scan base-package="kr.or.ddit.*.dao"
 		annotation="org.apache.ibatis.annotations.Mapper" 
 		factory-ref="sqlSessionFactory"

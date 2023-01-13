@@ -62,7 +62,7 @@
 		</dependency>
 
 	
-		<!-- 암호화 지원 https://mvnrepository.com/artifact/org.springframework.security/spring-security-crypto -->
+		<!-- 암호화 지원 -->
 		<dependency>
 		    <groupId>org.springframework.security</groupId>
 		    <artifactId>spring-security-crypto</artifactId>

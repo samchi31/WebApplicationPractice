@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.board.dao.BoardDAO">
+	<sql id="searchFrag">
+		<where>
+	    	<if test="simpleCondition neq null and @org.apache.commons.lang3.StringUtils@isNotBlank(simpleCondition.searchWord)">
+	    		<choose>
+	    			<when test="simpleCondition.searchType eq 'writer'">
+	    				INSTR(BO_WRITER, #{simpleCondition.searchWord}) > 0
+	    			</when>
+	    			<when test="simpleCondition.searchType eq 'content'">
+	    				INSTR(BO_CONTENT, #{simpleCondition.searchWord}) > 0
+	    			</when>
+	    			<otherwise>
+		    			INSTR(BO_WRITER, #{simpleCondition.searchWord}) > 0
+		    			OR
+		    			INSTR(BO_CONTENT, #{simpleCondition.searchWord}) > 0
+	    			</otherwise>
+	    		</choose>
+	    	</if>
+	    </where>	
+	</sql>
+	
+	<insert id="insertBoard" parameterType="BoardVO">
+		INSERT INTO freeboard (
+		    bo_no,    bo_title,    bo_writer,
+		    bo_ip,    bo_mail,    bo_pass,
+		    bo_content,  
+		    bo_hit
+		) 
+		VALUES( 
+			FREEBOARD_SEQ.NEXTVAL,
+			, #{boTitle,jdbcType=VARCHAR}
+			, #{boWriter,jdbcType=VARCHAR}
+			, #{boIp,jdbcType=VARCHAR}
+			, #{boMail,jdbcType=VARCHAR}
+			, #{boPass,jdbcType=VARCHAR}
+			, #{boContent,jdbcType=CLOB}
+			, #{boHit,jdbcType=NUMERIC}
+		)
+	</insert>
+
+	<select id="selectBoardList" parameterType="PagingVO" resultType="BoardVO">
+		WITH    ORDEREDBOARD AS (
+		    SELECT  BO_NO, BO_TITLE, BO_WRITER, BO_MAIL
+		            , BO_DATE , BO_HIT
+		            , (
+			            SELECT  COUNT(ATT_NO)
+			            FROM    ATTATCH
+			            WHERE   ATTATCH.BO_NO = FREEBOARD.BO_NO
+			        ) AS ATT_COUNT
+		    FROM    FREEBOARD
+		    <include refid="searchFrag" />
+		    ORDER   BY BO_NO DESC)
+		SELECT  A.*
+		FROM    (SELECT  ROWNUM AS RNUM, ORDEREDBOARD.*
+		        FROM    ORDEREDBOARD) A
+		WHERE   RNUM BETWEEN #{startRow} AND #{endRow}	
+	</select>
+	
+	<select id="selectTotalRecord" parameterType="PagingVO" resultType="int">
+		SELECT	COUNT(*)
+		FROM	FREEBOARD
+		<include refid="searchFrag" />
+	</select>
+	
+	<select id="selectBoard" parameterType="int" resultType="kr.or.ddit.board.vo.BoardVO">
+		SELECT 	BO_NO, BO_TITLE, BO_WRITER, BO_CONTENT, BO_DATE, BO_HIT
+        FROM    FREEBOARD
+        WHERE	BO_NO = #{boNo}
+	</select>
+	
+	<update id="updateBoard" parameterType="kr.or.ddit.board.vo.BoardVO">
+		UPDATE freeboard
+		SET
+		    bo_title =      #{boTitle,jdbcType=VARCHAR}
+		    , bo_writer =   #{boWriter,jdbcType=VARCHAR}
+		    , bo_ip =       #{boIp,jdbcType=VARCHAR}
+		    , bo_mail =     #{boMail,jdbcType=VARCHAR}
+		    , bo_pass =     #{boPass,jdbcType=VARCHAR}
+		    , bo_content =  #{boContent,jdbcType=CLOB}
+		    , bo_date =     #{boDate,jdbcType=DATE}
+		WHERE
+		    bo_no = #{boNo,jdbcType=NUMERIC}
+	</update>
+	
+	<delete id="deleteBoard" parameterType="int">
+		DELETE	FROM FREEBOARD
+		WHERE	BO_NO = #{boNo}	
+	</delete>
+
+</mapper>
