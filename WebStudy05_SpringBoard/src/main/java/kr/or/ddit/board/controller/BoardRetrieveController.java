@@ -17,7 +17,7 @@ import kr.or.ddit.vo.SearchVO;
 // /board/boardList.do (검색조건 : 작성자, 글의 내용, 전체)
 @Controller
 @RequestMapping("/board")
-public class BoardListController {
+public class BoardRetrieveController {
 	
 	@Inject
 	private BoardService boardService;
@@ -33,8 +33,18 @@ public class BoardListController {
 		pagingVO.setSimpleCondition(seachVO);
 		
 		boardService.retrieveBoardList(pagingVO);
-		model.addAttribute("boardList", pagingVO.getDataList());
+		model.addAttribute("pagingVO", pagingVO);
 		
 		return "board/boardList";
+	}
+	
+	@RequestMapping("boardView.do")
+	public String boardView(
+		@RequestParam("what") int boNo
+		, Model model
+	) {
+		BoardVO board = boardService.retrieveBoard(boNo);
+		model.addAttribute("board", board);
+		return "board/boardView";
 	}
 }

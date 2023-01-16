@@ -22,21 +22,22 @@
 	</sql>
 	
 	<insert id="insertBoard" parameterType="BoardVO">
+		<selectKey resultType="int" keyProperty="boNo" order="BEFORE">
+			SELECT	FREEBOARD_SEQ.NEXTVAL FROM DUAL			
+		</selectKey>
 		INSERT INTO freeboard (
 		    bo_no,    bo_title,    bo_writer,
 		    bo_ip,    bo_mail,    bo_pass,
-		    bo_content,  
-		    bo_hit
+		    bo_content
 		) 
 		VALUES( 
-			FREEBOARD_SEQ.NEXTVAL,
+			#{boNo, jdbcType=NUMERIC}
 			, #{boTitle,jdbcType=VARCHAR}
 			, #{boWriter,jdbcType=VARCHAR}
 			, #{boIp,jdbcType=VARCHAR}
 			, #{boMail,jdbcType=VARCHAR}
 			, #{boPass,jdbcType=VARCHAR}
 			, #{boContent,jdbcType=CLOB}
-			, #{boHit,jdbcType=NUMERIC}
 		)
 	</insert>
 
@@ -64,11 +65,27 @@
 		<include refid="searchFrag" />
 	</select>
 	
-	<select id="selectBoard" parameterType="int" resultType="kr.or.ddit.board.vo.BoardVO">
-		SELECT 	BO_NO, BO_TITLE, BO_WRITER, BO_CONTENT, BO_DATE, BO_HIT
-        FROM    FREEBOARD
-        WHERE	BO_NO = #{boNo}
+	<resultMap type="BoardVO" id="boardMap" autoMapping="true">
+		<id property="boNo" column="BOARD_NO"/>
+		<collection property="attatchList" ofType="AttatchVO" autoMapping="true"/>
+	</resultMap>
+	
+	<select id="selectBoard" parameterType="int" resultMap="boardMap">
+		SELECT 	A.BO_NO AS BOARD_NO, BO_TITLE, BO_WRITER, BO_MAIL, BO_CONTENT, BO_DATE, BO_HIT
+        		, ATT_NO , ATT_FILENAME, ATT_SAVENAME
+        		, ATT_MIME, ATT_FANCYSIZE, ATT_DOWNLOAD
+        		, B.BO_NO
+		FROM    FREEBOARD A   LEFT OUTER JOIN ATTATCH B ON (A.BO_NO = B.BO_NO)
+        WHERE	A.BO_NO = #{boNo}
 	</select>
+	
+	<update id="incrementHit" parameterType="int">
+	
+		update 	freeboard
+		set		bo_hit = bo_hit + 1
+		where	bo_no = #{boNo}
+	
+	</update>
 	
 	<update id="updateBoard" parameterType="kr.or.ddit.board.vo.BoardVO">
 		UPDATE freeboard

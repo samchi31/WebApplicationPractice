@@ -7,6 +7,11 @@ import kr.or.ddit.vo.PagingVO;
 public interface BoardService {
 	public int createBoard(BoardVO board);
 	public void retrieveBoardList(PagingVO<BoardVO> board);
+	/**
+	 * 
+	 * @param boNo
+	 * @return 존재여부(NotExistBoardException)
+	 */
 	public BoardVO retrieveBoard(int boNo);
 	/**
 	 * 게시글 수정

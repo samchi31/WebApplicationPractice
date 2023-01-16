@@ -12,6 +12,7 @@ public interface BoardDAO {
 	public List<BoardVO> selectBoardList(PagingVO<BoardVO> pagingVO);
 	public int selectTotalRecord(PagingVO<BoardVO> pagingVO);
 	public BoardVO selectBoard(int boNo);
+	public void incrementHit(int boNo);
 	public int updateBoard(BoardVO board);
 	public int deleteBoard(int boNo);
 }

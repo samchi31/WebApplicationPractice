@@ -1,10 +1,20 @@
 package kr.or.ddit.board.vo;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import kr.or.ddit.validate.DeleteGroup;
+import kr.or.ddit.validate.UpdateGroup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -15,14 +25,19 @@ import lombok.ToString;
 public class BoardVO implements Serializable {
 	
 	private int rnum;
-	
+	@NotNull(groups= {UpdateGroup.class, DeleteGroup.class})
 	private Integer boNo;
+	@NotBlank
 	private String boTitle;
+	@NotBlank
 	private String boWriter;
+	@NotBlank
 	private String boIp;
+	@Email
 	private String boMail;
+	@NotBlank(groups= {DeleteGroup.class, DeleteGroup.class})
 	@JsonIgnore							// 마샬링 제외
-	private transient String boPass;	// serializa 제외
+	private transient String boPass;	// serialize 제외
 	private String boContent;
 	private String boDate;
 	private Integer boHit;
@@ -32,4 +47,16 @@ public class BoardVO implements Serializable {
 	private int[] delAttNos; 	// 게시글 수정 시 삭제할 첨부파일 번호 유지
 	
 	private int attCount;
+	
+	private int startAttNo;
+	
+	private MultipartFile[] boFiles;
+	public void setBoFiles(MultipartFile[] boFiles) {
+		if(boFiles!= null && boFiles.length > 0) {
+			this.boFiles = boFiles;
+			this.attatchList = Arrays.stream(boFiles).filter(f -> !f.isEmpty())
+									.map((f)->{return new AttatchVO(f);})
+									.collect(Collectors.toList());
+		}
+	}
 }

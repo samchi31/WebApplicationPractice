@@ -2,16 +2,8 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
 
-		${pagingVO.dataList }
-<table>
+<table class="table table-bordered">
 	<thead>
 		<tr>
 			<th>일련번호</th>
@@ -23,13 +15,18 @@
 		</tr>
 	</thead>
 	<tbody>
-		 <c:set var="boardList" value="${pagingVO.dataList }"/>
+		 <c:set var="boardList" value="${pagingVO.dataList }" />
 		 <c:choose>
 		 	<c:when test="${not empty boardList }">
 				<c:forEach items="${boardList }" var="board">
 					<tr>
 						<td>${board.rnum }</td>
-						<td>${board.boTitle }[${board.attCount }]</td>
+						<td>
+							<c:url value="/board/boardView.do" var="viewURL">
+								<c:param name="what" value="${board.boNo }" />
+							</c:url>
+							<a href="${viewURL }">${board.boTitle }[${board.attCount }]</a>
+						</td>
 						<td>${board.boWriter }</td>
 						<td>${board.boMail }</td>
 						<td>${board.boDate }</td>
@@ -96,6 +93,4 @@
 	});
 
 </script>
-</body>
 
-</html>

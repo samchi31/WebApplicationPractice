@@ -36,8 +36,10 @@ public class BoardDAOTest {
 		board= new BoardVO();
 		board.setBoTitle("테스트");
 		board.setBoWriter("김테스트");
-		board.setBoIp("test.test");
-		board.setBoPass("java");
+		board.setBoIp("127.0.0.1");
+		board.setBoMail("asdf@qewr.zxcv");
+		board.setBoPass("1234");
+		board.setBoContent("내용테스트");
 	}
 	
 	@Test
@@ -45,7 +47,7 @@ public class BoardDAOTest {
 		log.info("주입된 객체: {}", boardDAO);
 	}
 
-//	@Test
+	@Test
 	public void testInsertBoard() {
 		int cnt = boardDAO.insertBoard(board);
 		log.info("{}",cnt);
@@ -62,9 +64,12 @@ public class BoardDAOTest {
 		log.info("{}", boardDAO.selectTotalRecord(pagingVO));
 	}
 
-//	@Test
+	@Test
 	public void testSelectBoard() {
-		fail("Not yet implemented");
+		BoardVO boardVO = boardDAO.selectBoard(112);
+		log.info("{}",boardVO);
+		assertNotNull(boardVO);
+		boardVO.getAttatchList().stream().forEach(System.out::println);
 	}
 
 //	@Test
