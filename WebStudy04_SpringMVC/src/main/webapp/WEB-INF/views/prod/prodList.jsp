@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.ddit.or.kr/class305" prefix="ui" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -157,7 +158,8 @@
 				listBody.html(trTags);
 				
 // 				console.log(pagingVO.pagingHTML);
-				pagingArea.html(pagingVO.pagingHTML);
+// 				pagingArea.html(pagingVO.pagingHTML);
+				pagingArea.html(resp.pagingHTML);
 			},
 			error : function(jqXHR, status, error) {
 				console.log(jqXHR);

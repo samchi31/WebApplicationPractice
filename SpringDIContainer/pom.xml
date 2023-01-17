@@ -33,6 +33,13 @@
 		    <artifactId>spring-context</artifactId>
 		    <version>${org.springframework-version}</version>
 		</dependency>
+		<!-- 트랜잭션 관리용(AOP 지원) -->
+		<dependency>
+		    <groupId>org.aspectj</groupId>
+		    <artifactId>aspectjweaver</artifactId>
+		    <version>1.9.19</version>
+		    <scope>runtime</scope>
+		</dependency>
 	
 	    <dependency>
 		    <groupId>javax.inject</groupId>

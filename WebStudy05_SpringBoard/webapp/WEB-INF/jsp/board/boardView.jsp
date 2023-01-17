@@ -24,6 +24,8 @@
 		</c:if>
 	</tbody>
 	<tfoot>
-		
+		<a class="btn btn-primary" href="">수정</a>
+		<a class="btn btn-danger" href="">삭제</a>
+		<a class="btn btn-secondary" href="<c:url value='/board/boardList.do'/>">목록으로</a>
 	</tfoot>
 </table>

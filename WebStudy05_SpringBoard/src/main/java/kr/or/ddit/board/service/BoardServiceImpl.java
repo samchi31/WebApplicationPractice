@@ -48,8 +48,8 @@ public class BoardServiceImpl implements BoardService {
 		int rowcnt = attatchDAO.insertAttatches(board);
 		try {
 			for (AttatchVO attatch : attatchList) {
-				if(1==1)
-					throw new RuntimeException("강제 발생 예외");
+//				if(1==1)
+//					throw new RuntimeException("트랜잭션 확인용 강제 발생 예외");
 				attatch.saveTo(saveFiles);
 			}
 			return rowcnt;
@@ -58,7 +58,7 @@ public class BoardServiceImpl implements BoardService {
 		}
 	}
 	
-	@Transactional
+//	@Transactional
 	@Override
 	public int createBoard(BoardVO board) {
 		String plain = board.getBoPass();

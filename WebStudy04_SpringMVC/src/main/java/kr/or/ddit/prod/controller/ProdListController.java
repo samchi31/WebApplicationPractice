@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import kr.or.ddit.prod.dao.OthersDAO;
 import kr.or.ddit.prod.service.ProdService;
+import kr.or.ddit.ui.PaginationRenderer;
 import kr.or.ddit.vo.BuyerVO;
 import kr.or.ddit.vo.PagingVO;
 import kr.or.ddit.vo.ProdVO;
@@ -30,6 +32,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(value="/prod")
 @Controller
 public class ProdListController{
+	@Resource(name="bootstrapPaginationRenderer")	// inject 받으려는 객체의 구현체가 여러개인 경우 @Inject는 위험
+	private PaginationRenderer renderer;
 	
 	private final ProdService service;
 	private final OthersDAO othersDAO;
@@ -74,7 +78,7 @@ public class ProdListController{
 		service.retrieveProdList(pagingVO);
 		model.addAttribute("pagingVO", pagingVO);
 		model.addAttribute("detailCondition",detailCondition);
-		log.info("paging data : {}", pagingVO);
+		model.addAttribute("pagingHTML", renderer.renderPagination(pagingVO));
 		
 		return "jsonView";	// servlet-context.xml에 등록한 id -> adapter에서 d.s으로 넘김 -> d.s 가 v.r로 넘김(suffix, prefix가 다른 v.r가 필요하다)
 	}

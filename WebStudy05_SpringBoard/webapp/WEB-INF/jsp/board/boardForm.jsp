@@ -2,47 +2,79 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 
 <script src="${pageContext.request.contextPath }/resources/ckeditor/ckeditor.js"></script>
 
 <form:form modelAttribute="board" enctype="multipart/form-data" method="post">
-<table>
+<table class="table table-bordered">
 	<tr>
-		<th>게시글 제목</th>
+		<th><spring:message code="board.boTitle" /></th>
 		<td>
-			<form:input path="boTitle" cssClass="form-control"/>
-			<form:errors path="boTitle"/>
+			<form:input path="boTitle" type="text"
+				cssClass="form-control"  />
+			<form:errors path="boTitle" element="span" cssClass="text-danger" />
 		</td>
 	</tr>
-	<tr><th>작성자</th><td><input class="form-control" type="text"  required name="boWriter" value="${freeboard.boWriter}" /><span class="text-danger">${errors.boWriter}</span></td></tr>
-	<tr><th>아이피</th><td><input class="form-control" type="text"  required name="boIp" value="${pageContext.request.remoteAddr}" readonly/><span class="text-danger">${errors.boIp}</span></td></tr>
-	<tr><th>이메일</th><td><input class="form-control" type="text" name="boMail" value="${freeboard.boMail}" /><span class="text-danger">${errors.boMail}</span></td></tr>
-	<tr><th>비밀번호</th><td><input class="form-control" type="password"  required name="boPass" value="${freeboard.boPass}" /><span class="text-danger">${errors.boPass}</span></td></tr>
 	<tr>
-		<th>게시글 내용</th>
+		<th><spring:message code="board.boWriter" /></th>
 		<td>
-			<form:textarea path="boContent"/>
+			<form:input path="boWriter" type="text"
+				cssClass="form-control"  />
+			<form:errors path="boWriter" element="span" cssClass="text-danger" />
+		</td>
+	</tr>
+	<tr>
+		<th><spring:message code="board.boPass" /></th>
+		<td>
+			<input type="password" name="boPass" class="form-control"/>
+			<form:errors path="boPass" element="span" cssClass="text-danger" />
+		</td>
+	</tr>
+	<tr>
+		<th><spring:message code="board.boIp" /></th>
+		<td>
+			<input name="boIp" type="text" readonly value="${pageContext.request.remoteAddr }"/>
+			<form:errors path="boIp" element="span" cssClass="text-danger" />
+		</td>
+	</tr>
+	<tr>
+		<th><spring:message code="board.boMail" /></th>
+		<td>
+			<form:input path="boMail" type="email"
+				cssClass="form-control" />
+			<form:errors path="boMail" element="span" cssClass="text-danger" />
 		</td>
 	</tr>
 	<tr>
 		<th>첨부파일</th>
 		<td>
-			<input type="file" name="boFiles"/>
-			<input type="file" name="boFiles"/>
-			<input type="file" name="boFiles"/>
+			<input type="file" name="boFiles" />
+			<input type="file" name="boFiles" />
+			<input type="file" name="boFiles" />
+		</td>
+	</tr>
+	<tr>
+		<th><spring:message code="board.boContent" /></th>
+		<td>
+			<form:textarea path="boContent" type="text"
+				cssClass="form-control" />
+			<form:errors path="boContent" element="span" cssClass="text-danger" />
 		</td>
 	</tr>
 	<tr>
 		<td colspan="2">
-			<input type="submit" value="저장" class="btn btn-success"/>
+			<form:button type="submit" class="btn btn-success">저장</form:button>
+			<a class="btn btn-secondary" href="<c:url value='/board/boardList.do'/>">목록으로</a>
 		</td>
 	</tr>
-	
 </table>
 </form:form>
 
 <script>
 
-CKEDITOR.replace('boContent');
+CKEDITOR.replace('boContent',{
+	filebrowserUploadUrl: '${pageContext.request.contextPath}/board/boardImage.do?command=QuickUpload&type=Files&responseType=json'
+});
 
 </script>

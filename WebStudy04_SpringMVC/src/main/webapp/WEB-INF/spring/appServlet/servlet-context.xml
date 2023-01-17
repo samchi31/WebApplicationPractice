@@ -63,4 +63,17 @@
 	<!-- 정적 자원이 일괄 관리 되는 경우 활용 -->
 	<mvc:resources location="/resources/" mapping="/resources/**" cache-period="0" />
 	<!-- 따로 있는경우 default servlet 설정 사용 -->
+	
+	<bean id="bootstrapPaginationRenderer" class="kr.or.ddit.ui.BootstrapPaginationRenderer"/>
+	
+	<bean id="paginationManager" class="kr.or.ddit.ui.DefaultPaginationManager">
+		<constructor-arg name="rendererMap">
+			<map>
+				<entry key="default">
+					<bean class="kr.or.ddit.ui.DefaultPaginationRenderer"/>
+				</entry>
+				<entry key="bootstrap" value-ref="bootstrapPaginationRenderer"/>
+			</map>
+		</constructor-arg>
+	</bean>
 </beans>

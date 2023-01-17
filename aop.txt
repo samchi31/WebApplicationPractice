@@ -1,0 +1,10 @@
+모든 서비스를 대상(core concern)으로 전달되는 파라미터와 반환값을 시스템 로그로 기록(cross cutting concern)하라
+거기에, 서비스(로직, core concern)이 실행되는데 소요되는 시간도 로그(cross cutting concern)로 기록하라
+
+core concern -> target
+cross cutting concern -> advice
+
+target + advice = weaving
+
+advice, pointcut으로 선택된 target을 위빙
+advice+ pointcut -> aspect

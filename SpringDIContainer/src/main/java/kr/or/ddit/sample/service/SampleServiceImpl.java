@@ -7,6 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Service;
 
 import kr.or.ddit.sample.dao.SampleDAO;
 import kr.or.ddit.sample.dao.SampleDAOFactory;
@@ -15,6 +16,7 @@ import kr.or.ddit.sample.dao.SampleDAOImpl_Postgre;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Service
 public class SampleServiceImpl implements SampleService, ApplicationContextAware {
 	private ConfigurableApplicationContext context;
 	private Resource log4j2xml;
