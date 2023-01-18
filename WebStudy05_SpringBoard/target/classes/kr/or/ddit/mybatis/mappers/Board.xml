@@ -71,7 +71,7 @@
 	</resultMap>
 	
 	<select id="selectBoard" parameterType="int" resultMap="boardMap">
-		SELECT 	A.BO_NO AS BOARD_NO, BO_TITLE, BO_WRITER, BO_MAIL, BO_CONTENT, BO_DATE, BO_HIT
+		SELECT 	A.BO_NO AS BOARD_NO, BO_TITLE, BO_WRITER, BO_PASS, BO_MAIL, BO_CONTENT, BO_DATE, BO_HIT
         		, ATT_NO , ATT_FILENAME, ATT_SAVENAME
         		, ATT_MIME, ATT_FANCYSIZE, ATT_DOWNLOAD
         		, B.BO_NO
@@ -92,11 +92,9 @@
 		SET
 		    bo_title =      #{boTitle,jdbcType=VARCHAR}
 		    , bo_writer =   #{boWriter,jdbcType=VARCHAR}
-		    , bo_ip =       #{boIp,jdbcType=VARCHAR}
 		    , bo_mail =     #{boMail,jdbcType=VARCHAR}
-		    , bo_pass =     #{boPass,jdbcType=VARCHAR}
 		    , bo_content =  #{boContent,jdbcType=CLOB}
-		    , bo_date =     #{boDate,jdbcType=DATE}
+		    , bo_date =     sysdate
 		WHERE
 		    bo_no = #{boNo,jdbcType=NUMERIC}
 	</update>

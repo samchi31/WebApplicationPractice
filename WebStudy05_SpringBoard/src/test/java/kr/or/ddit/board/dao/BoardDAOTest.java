@@ -34,11 +34,11 @@ public class BoardDAOTest {
 		pagingVO = new PagingVO<>();
 		pagingVO.setCurrentPage(1);
 		board= new BoardVO();
-		board.setBoTitle("테스트");
-		board.setBoWriter("김테스트");
+		board.setBoNo(123);
+		board.setBoTitle("테스트1");
+		board.setBoWriter("update테스트");
 		board.setBoIp("127.0.0.1");
 		board.setBoMail("asdf@qewr.zxcv");
-		board.setBoPass("1234");
 		board.setBoContent("내용테스트");
 	}
 	
@@ -72,9 +72,10 @@ public class BoardDAOTest {
 		boardVO.getAttatchList().stream().forEach(System.out::println);
 	}
 
-//	@Test
+	@Test
 	public void testUpdateBoard() {
-		fail("Not yet implemented");
+		int rowcnt = boardDAO.updateBoard(board);
+		assertEquals(1, rowcnt);
 	}
 
 //	@Test

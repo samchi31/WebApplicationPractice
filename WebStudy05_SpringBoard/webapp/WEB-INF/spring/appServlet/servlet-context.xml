@@ -10,7 +10,11 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
 	<!-- HandlerMapping, HandlerAdapter, ViewResolver, Validator 등의 MVC 프로그래밍 모델이서 사용될 전략 객체들을 자동 등록 -->
-	<mvc:annotation-driven validator="validator"></mvc:annotation-driven>
+	<mvc:annotation-driven validator="validator">
+		<mvc:argument-resolvers>
+			<bean class="org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver" />
+		</mvc:argument-resolvers>
+	</mvc:annotation-driven>
 	
 	<!-- 이름을 반드시 messageSource, H.A 가 injection 받는다  -->
 	<!-- 로케일에 따른 언어별 메시지 처리를 위한 전략 객체 -->
@@ -88,4 +92,7 @@
 			</map>
 		</constructor-arg>
 	</bean>
+	
+	<!-- 단순한 model2 구조일때 사용 requestMapping, logical view name -->
+	<mvc:view-controller path="/login/loginForm" view-name="login/loginForm"/>
 </beans>
