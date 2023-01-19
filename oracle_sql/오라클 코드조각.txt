@@ -1,0 +1,81 @@
+--comment on column member.mem_id is '회원아이디';
+SELECT 'COMMENT ON COLUMN ' ||
+    TABLE_NAME || '.' || COLUMN_NAME ||
+    ' IS '''';'
+FROM COLS
+WHERE TABLE_NAME = 'MEMBER';
+
+comment 생성 코드조각
+==================================================================================
+
+SELECT  'private '||
+    DECODE( DATA_TYPE , 'NUMBER', 'Integer ', 'String ') ||
+    LOWER(SUBSTR(COLUMN_NAME, 1, 1)) ||
+    SUBSTR( REPLACE( INITCAP(COLUMN_NAME) , '_', ''), 2) || ';'
+FROM COLS
+WHERE TABLE_NAME = 'MEMBER';
+
+java bean 생성 코드조각
+===================================================================================
+--prod.prodId=상품코드
+SELECT LOWER(TABLE_NAME)||'.'||SNAKETOCAMEL(COLUMN_NAME)||
+        '='||COLUMN_NAME
+FROM USER_COL_COMMENTS
+WHERE TABLE_NAME = 'PROD';
+
+message 번들 생성 코드조각
+===================================================================================
+--<tr>
+--		<th>회원아이디</th>
+--		<td>${member.memId }</td>
+--	</tr>
+
+SELECT '<tr><th>' || COMMENTS ||'</th>' ||
+    '<td>${' || LOWER(TABLE_NAME) || '.' ||
+    SNAKETOCAMEL(COLUMN_NAME) || '}</td></tr>'
+FROM USER_COL_COMMENTS
+WHERE TABLE_NAME = 'MEMBER';
+
+상세조회 table UI 코드조각
+===================================================================================
+--#{memId,jdbcType=VARCHAR}
+SELECT ', #{' || SNAKETOCAMEL(COLUMN_NAME) ||',jdbcType=' ||
+    CASE
+        WHEN DATA_TYPE = 'VARCHAR2' THEN 'VARCHAR'
+        WHEN DATA_TYPE = 'NUMBER' THEN 'NUMERIC'
+        ELSE DATA_TYPE
+    END || '}'
+FROM COLS
+WHERE TABLE_NAME = 'MEMBER';
+
+인라인 파라미터 생성 코드조각
+====================================================================================
+--<tr>
+--				<th><spring:message code="member.memId" /></th>
+--				<td>
+--					<form:input path="memId" class="form-control" />
+--					<form:errors path="memId" element="span" cssClass="text-danger"/>
+--				</td>
+--			</tr>
+SELECT '<tr><th>' || 
+    '<spring:message code="' || 
+    LOWER(A.TABLE_NAME)||'.'||SNAKETOCAMEL(A.COLUMN_NAME)||'" />'||
+    '</th><td>' ||
+    '<form:input path="'||SNAKETOCAMEL(A.COLUMN_NAME)||    
+    '" type="' ||
+    CASE
+    WHEN DATA_TYPE = 'DATE' OR DATA_TYPE = 'NUMBER' THEN LOWER(DATA_TYPE)
+    ELSE 'text'
+    END ||
+    '" cssClass="form-control"' ||
+    DECODE(NULLABLE, 'N', ' required="true"', '') ||
+   ' />' ||
+   '<form:errors path="'||SNAKETOCAMEL(A.COLUMN_NAME)||'" '||
+   'element="span" cssClass="text-danger" /></td></tr>'
+FROM COLS A LEFT OUTER JOIN USER_COL_COMMENTS B
+        ON (A.TABLE_NAME = B.TABLE_NAME AND A.COLUMN_NAME = B.COLUMN_NAME)
+WHERE A.TABLE_NAME = 'MEMBER'
+ORDER BY COLUMN_ID ASC;
+
+입력 양식 UI 생성 코드조각
+===================================================================================
