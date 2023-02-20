@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.etc.dao.ProceduralDAO">
+	<select id="call_FN_CREATE_CARTNO" statementType="CALLABLE">
+		{
+			#{cartNo,jdbcType=CHAR,mode=OUT} = call FN_CREATE_CARTNO(
+				#{pDate,jdbcType=DATE,javaType=date,mode=IN}
+			)
+		}
+	</select>
+	<update id="call_PROC_CART01" statementType="CALLABLE">
+		{
+			call PROC_CART01(
+				#{pPeriod,jdbcType=VARCHAR,javaType=string,mode=IN}
+				, #{pMid,jdbcType=VARCHAR,javaType=string,mode=OUT}
+				, #{pSum,jdbcType=NUMERIC,javaType=bigDecimal,mode=OUT}
+				
+			)
+		}
+	</update>
+</mapper>

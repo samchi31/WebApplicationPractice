@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd">
+
+	<!-- 	Spring-task 기반의 스케쥴링에 필요한 전략  -->
+
+	<task:executor id="executor" pool-size="5" queue-capacity="5" keep-alive="2"/>
+	<task:scheduler id="scheduler" pool-size="5"/>
+	
+	<task:annotation-driven executor="executor" scheduler="scheduler"/>
+	
+	<!-- 	Quartz Scheduler 기반의 스케쥴링에 필요한 전략  -->
+	
+	<bean id="simpleQuartzJobDetail" class="kr.or.ddit.scheduling.jobs.SimpleQuartzJobDetail" />
+	
+	<bean id="methodInvokingJobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean" 
+		p:targetObject-ref="simpleQuartzJobDetail"
+		p:targetMethod="printNumberUseQuartz"
+	/>
+	
+	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean" 
+		p:jobDetail-ref="methodInvokingJobDetail"
+		p:cronExpression="*/7 * * * * ?"
+	/>
+	
+	<bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" 
+		p:triggers-ref="cronTrigger"
+	/>
+	
+</beans>

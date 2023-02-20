@@ -2,3 +2,5 @@
 .recommenders
 */.settings
 */.project
+HurryUp
+*/target/*

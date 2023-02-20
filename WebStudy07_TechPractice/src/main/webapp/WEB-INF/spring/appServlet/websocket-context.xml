@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:websocket="http://www.springframework.org/schema/websocket"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+		http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket-4.3.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="realtimeTextWebSocketHandler" class="kr.or.ddit.realtime.handler.RealtimeTextWebSocketHandler" />
+	<bean id="handshakeInterceptor" class="org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor" 
+		p:copyAllAttributes="true"
+		p:copyHttpSessionId="true"
+		p:createSession="true"
+	/>
+	<websocket:handlers allowed-origins="*">
+		<websocket:mapping handler="realtimeTextWebSocketHandler" path="/realtime/full/sockJS" />
+		<websocket:handshake-interceptors>
+			<ref bean="handshakeInterceptor"/>
+		</websocket:handshake-interceptors>
+		<websocket:sockjs />
+	</websocket:handlers>
+	
+	<bean class="kr.or.ddit.realtime.listener.StompWebSocketSessionListener" />
+	
+	<task:scheduler id="schedulerForStomp" pool-size="5"/>
+	
+<!-- 	specific user direct message : receive -->
+	
+	<websocket:message-broker application-destination-prefix="/app" user-destination-prefix="/user">
+		<websocket:stomp-endpoint path="/realtime/full/stomp/**" allowed-origins="*" />
+		<websocket:simple-broker prefix="/topic,/queue" heartbeat="4000,4000" scheduler="schedulerForStomp"/>
+		<websocket:argument-resolvers>
+			<bean class="org.springframework.security.messaging.context.AuthenticationPrincipalArgumentResolver" />		
+		</websocket:argument-resolvers>
+	</websocket:message-broker>
+	  
+	<security:websocket-message-broker>
+		<security:intercept-message type="CONNECT" access="permitAll"/>
+		<security:intercept-message type="UNSUBSCRIBE" access="permitAll"/>
+		<security:intercept-message type="DISCONNECT" access="permitAll"/>
+		
+		<security:intercept-message pattern="/user/queue/*/echo" access="permitAll"/>
+		<security:intercept-message pattern="/topic/*/echo" access="permitAll"/>
+		<security:intercept-message pattern="/app/*/echo" access="permitAll"/>
+		<security:intercept-message pattern="/app/mine/noti" access="permitAll"/>
+		<security:intercept-message pattern="/user/queue/noti" access="permitAll"/>
+		<security:intercept-message pattern="/topic/system/noti" access="permitAll"/>
+		
+		<security:intercept-message pattern="/topic/mockChat/**" access="isAuthenticated()"/>
+		<security:intercept-message pattern="/app/mockChat/**" access="isAuthenticated()"/>
+		
+		<security:intercept-message pattern="/user/queue/errors" type="SUBSCRIBE" access="permitAll"/>
+		<security:intercept-message pattern="/user/**" access="hasRole('USER')"/>
+		<security:intercept-message pattern="/app/**" access="hasRole('USER')"/>
+		<security:intercept-message pattern="/topic/**" access="hasRole('USER')"/>
+		
+		<security:intercept-message type="MESSAGE" access="denyAll"/>
+		<security:intercept-message type="SUBSCRIBE" access="denyAll"/>
+		<security:intercept-message pattern="/**" access="denyAll"/>
+		
+	</security:websocket-message-broker>  
+</beans>

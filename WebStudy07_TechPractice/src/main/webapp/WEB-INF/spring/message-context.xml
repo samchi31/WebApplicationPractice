@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 	로케일에 따른 언어별 메시지 처리를 위한 전략 객체. -->
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<array>
+				<value>org.springframework.security.messages</value>
+				<value>kr.or.ddit.msgs.message</value>
+				<value>kr.or.ddit.msgs.errorMessage</value>
+			</array>
+		</property>
+	</bean>
+	
+	<!--	LocaleChangeInterceptor 가 변경한 로케일 정보를 저장하기 위해 사용하는 전략객체 -->
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" 
+		p:cookieName="localeCookie"
+		p:cookiePath="/"
+		p:cookieMaxAge="#{60*60*24*5}"
+	/>
+	
+	<!-- 	MessageSource 에 등록된 메시지에 접근하기 위한 전략 객체 -->
+	<bean id="messageSourceAccessor" class="org.springframework.context.support.MessageSourceAccessor" 
+		c:messageSource-ref="messageSource"
+	/>
+</beans>

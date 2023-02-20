@@ -75,18 +75,19 @@ public class MemberServiceImpl implements MemberService {
 		MemberVO inputData = new MemberVO();
 		inputData.setMemId(member.getMemId());
 		inputData.setMemPass(member.getMemPass());
+		ServiceResult result;
 //		ServiceResult result = authenticationManager.authenticate(inputData);
-		authenticationManager.authenticate(authentication);
-		if(ServiceResult.OK.equals(result)) {
-			int rowcnt = memberDAO.updateMember(member);
-			result = rowcnt > 0 ? ServiceResult.OK : ServiceResult.FAIL;
-		}
+//		authenticationManager.authenticate(authentication);
+//		if(ServiceResult.OK.equals(result)) {
+//			int rowcnt = memberDAO.updateMember(member);
+//			result = rowcnt > 0 ? ServiceResult.OK : ServiceResult.FAIL;
+//		}
 		return result;
 	}
 
 	@Override
 	public ServiceResult removeMember(MemberVO member) {
-		ServiceResult result = authenticationManager.authenticate(member);C
+		ServiceResult result = authenticationManager.authenticate(member);
 		if(ServiceResult.OK.equals(result)) {
 			int rowcnt = memberDAO.deleteMember(member.getMemId());
 			result = rowcnt > 0 ? ServiceResult.OK : ServiceResult.FAIL;

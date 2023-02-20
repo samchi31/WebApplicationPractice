@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.uiplugin.dao.ProdDAO">
+	<select id="selectTotalRecord" resultType="int">
+		SELECT COUNT(*)
+		FROM PROD INNER JOIN LPROD ON (PROD_LGU = LPROD_GU) 
+						INNER JOIN BUYER ON (PROD_BUYER = BUYER_ID)
+	</select>
+	<select id="selectProdList" resultType="ProdVO" parameterType="PagingVO">
+		SELECT B.*
+		FROM (
+			SELECT A.*, ROWNUM RNUM
+			FROM (
+				SELECT PROD_ID, PROD_NAME, PROD_LGU, 
+					PROD_BUYER, PROD_COST, PROD_PRICE, 
+					PROD_SALE, PROD_OUTLINE, PROD_DETAIL, 
+					PROD_IMG, PROD_TOTALSTOCK, 
+					
+					TO_TIMESTAMP(PROD_INSDATE) PROD_INSDATE,
+					 
+					PROD_PROPERSTOCK, PROD_SIZE, PROD_COLOR, 
+					PROD_DELIVERY, PROD_UNIT, PROD_QTYIN, 
+					PROD_QTYSALE, PROD_MILEAGE
+					, LPROD_NM 
+					, BUYER_ID "buyer.buyerId"
+					, BUYER_NAME "buyer.buyerName"
+					, BUYER_ADD1 "buyer.buyerAdd1"
+					, BUYER_COMTEL "buyer.buyerComtel"
+					, BUYER_MAIL "buyer.buyerMail"
+				FROM PROD INNER JOIN LPROD ON (PROD_LGU = LPROD_GU) 
+						INNER JOIN BUYER ON (PROD_BUYER = BUYER_ID)
+				<where>
+					<if test="_parameter neq null and randomSearch neq null">
+						PROD_INSDATE BETWEEN TO_TIMESTAMP(#{randomSearch.start}) and TO_TIMESTAMP(#{randomSearch.end})
+					</if>
+				</where>
+				
+				ORDER BY PROD_LGU ASC, PROD.ROWID DESC
+			) A
+		) B
+		<where>
+			<if test="_parameter neq null and startRow gt 0">
+				RNUM BETWEEN #{startRow} AND #{endRow}
+			</if>
+		</where>
+	</select>
+</mapper>
